@@ -35,7 +35,7 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        Date now = new Date(System.currentTimeMillis());
+        Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
@@ -55,14 +55,6 @@ public class JwtUtil {
         return extractEmail(token);
     }
 
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    public String extractPerfil(String token) {
-        return extractAllClaims(token).get("perfil", String.class);
-    }
-
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -76,17 +68,16 @@ public class JwtUtil {
                 .getBody();
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date(System.currentTimeMillis()));
-    }
-
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    private Boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
     public boolean isTokenValid(String token, String username) {
-        final String email = extractEmail(token);
-        return email.equals(username) && !isTokenExpired(token);
+        final String email = extractUsername(token);
+        return email != null && email.equals(username) && !isTokenExpired(token);
+    }
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        return isTokenValid(token, userDetails.getUsername());
     }
 }

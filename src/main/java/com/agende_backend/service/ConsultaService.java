@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.agende_backend.dto.ConsultaRequest;
 import com.agende_backend.dto.ConsultaResponse;
 import com.agende_backend.entity.Consulta;
-import com.agende_backend.entity.Notificacao;
 import com.agende_backend.entity.Paciente;
 import com.agende_backend.entity.Profissional;
 import com.agende_backend.repository.ConsultaRepository;
@@ -136,39 +135,48 @@ public class ConsultaService {
     }    
 
     public List<ConsultaResponse> listarConsultasProfissional(UUID profissionalId) {
-    Profissional profissional = profissionalRepository.findById(profissionalId)
+    profissionalRepository.findById(profissionalId)
             .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
-    List<Consulta> consultas = consultaRepository.findByProfissional(profissional);
+    List<Consulta> consultas =
+            consultaRepository.findByProfissionalIdOrderByDataConsultaDescHoraConsultaDesc(profissionalId);
 
     return consultas.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
 }
 
+
+
     @Transactional
     public ConsultaResponse confirmarConsulta(UUID consultaId) {
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
+        if (consulta.getStatus() == Consulta.StatusConsulta.CANCELADA) {
+            throw new RuntimeException("Não é possível confirmar uma consulta cancelada");
+        }
+
+        if (consulta.getStatus() == Consulta.StatusConsulta.REALIZADA) {
+            throw new RuntimeException("Não é possível confirmar uma consulta já realizada");
+        }
+
+        if (consulta.getStatus() == Consulta.StatusConsulta.CONFIRMADA) {
+            throw new RuntimeException("Consulta já está confirmada");
+        }
+
+        if (consulta.getStatus() != Consulta.StatusConsulta.AGENDADA) {
+            throw new RuntimeException("Apenas consultas agendadas podem ser confirmadas");
+        }
+
         consulta.setStatus(Consulta.StatusConsulta.CONFIRMADA);
         consultaRepository.save(consulta);
 
-        // Notificar paciente
-        Notificacao notificacao = new Notificacao();
-        notificacao.setUsuario(consulta.getPaciente().getUsuario());
-        notificacao.setTitulo("Consulta Confirmada");
-        notificacao.setMensagem("Sua consulta com " + consulta.getProfissional().getNomeCompleto() + 
-                            " foi confirmada para " + consulta.getDataConsulta() + " às " + consulta.getHoraConsulta());
-        
-        notificacao.setTipo(Notificacao.TipoNotificacao.CONFIRMACAO);
-        notificacao.setLida(false);
-        notificacao.setDataEnvio(LocalDateTime.now());
-        //notificacaoRepository.save(notificacao);
-        
+        notificacaoService.enviarNotificacaoConfirmacao(consulta);
 
         return convertToResponse(consulta);
     }
+
 
     @Transactional
     public ConsultaResponse marcarRealizada(UUID consultaId) {

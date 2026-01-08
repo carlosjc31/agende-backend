@@ -69,6 +69,20 @@ public class NotificacaoService {
         notificacaoRepository.save(notifProf);
     }
 
+    @Transactional
+    public void enviarNotificacaoConfirmacao(Consulta consulta) {
+        Notificacao notifPaciente = new Notificacao();
+        notifPaciente.setUsuario(consulta.getPaciente().getUsuario());
+        notifPaciente.setTipo(Notificacao.TipoNotificacao.CONFIRMACAO);
+        notifPaciente.setTitulo("Consulta Confirmada");
+        notifPaciente.setMensagem(
+            "Sua consulta com " + consulta.getProfissional().getNomeCompleto() +
+            " foi confirmada para " + consulta.getDataConsulta() + " às " + consulta.getHoraConsulta()
+        );
+        notificacaoRepository.save(notifPaciente);
+    }
+
+
     public List<NotificacaoResponse> listarNotificacoes(UUID usuarioId) {
         return notificacaoRepository.findByUsuarioIdOrderByDataEnvioDesc(usuarioId).stream()
                 .map(this::convertToResponse)
