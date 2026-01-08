@@ -77,4 +77,6 @@ public class Consulta {
     public enum StatusConsulta {
         AGENDADA, CONFIRMADA, CANCELADA, REALIZADA, FALTOU
     }
+
+    
 }

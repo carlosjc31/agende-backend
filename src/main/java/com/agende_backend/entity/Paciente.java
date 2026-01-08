@@ -3,6 +3,7 @@ package com.agende_backend.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -57,4 +58,6 @@ public class Paciente {
 
     @Column(name = "foto_url", columnDefinition = "TEXT")
     private String fotoUrl;
+
+    
 }

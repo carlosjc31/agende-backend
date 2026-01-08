@@ -1,4 +1,4 @@
-package com.agende_backend.dto;
+package com.agende_backend.controller;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RegisterPacientRequest {
+public class RegisterPacienteRequest {
 
     @NotBlank(message = "Nome completo é obrigatório")
     private String nomeCompleto;
@@ -40,4 +40,6 @@ public class RegisterPacientRequest {
     private String cidade;
     private String estado;
     private String cep;
+    
+
 }

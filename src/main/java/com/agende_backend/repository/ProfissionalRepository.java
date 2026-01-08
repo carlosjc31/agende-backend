@@ -18,7 +18,12 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, UUID
 
     Optional<Profissional> findByCrm(String crm);
 
+    Long countByValidado(Boolean validado);
     Boolean existsByCrm(String crm);
+
+    Boolean existsByCrmAndIdNot(String crm, UUID id);
+
+    Boolean existsByUsuarioId(UUID usuarioId);
 
     List<Profissional> findByValidadoTrue();
 
@@ -32,4 +37,6 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, UUID
 
     @Query("SELECT p FROM Profissional p WHERE p.validado = true ORDER BY p.avaliacaoMedia DESC")
     List<Profissional> findTopRatedProfissionais();
+
+    List<Profissional> findByValidado(Boolean validado);
 }

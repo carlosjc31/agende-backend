@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.agende_backend.entity.Consulta;
+import com.agende_backend.entity.Profissional;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, UUID> {
     
@@ -20,8 +21,8 @@ public interface ConsultaRepository extends JpaRepository<Consulta, UUID> {
     List<Consulta> findByPacienteIdAndStatusOrderByDataConsultaDescHoraConsultaDesc(
         UUID pacienteId, Consulta.StatusConsulta status);
 
-    List<Consulta> findByProfissionalIdAndStatusOrderByDataConsultaDescHoraConsultaDesc(
-        UUID profissionalId, Consulta.StatusConsulta status);
+    List<Consulta> findByProfissionalIdAndStatusInOrderByDataConsultaDescHoraConsultaDesc(
+        UUID profissionalId, List<Consulta.StatusConsulta> status);
 
     @Query("SELECT c FROM Consulta c WHERE c.profissional.id = :profissionalId " +
            "AND c.dataConsulta = :data " +
@@ -41,5 +42,15 @@ public interface ConsultaRepository extends JpaRepository<Consulta, UUID> {
            "AND c.status IN ('AGENDADA', 'CONFIRMADA') " +
            "ORDER BY c.dataConsulta ASC, c.horaConsulta ASC")
     List<Consulta> findProximasConsultasPaciente(@Param("pacienteId") UUID pacienteId);
+    
+    long countByDataConsulta(LocalDate dataConsulta);
+
+    long countByDataConsultaAndProfissionalId(LocalDate dataConsulta, UUID profissionalId);
+
+    long countByDataConsultaAndProfissionalIdAndStatus(LocalDate dataConsulta, UUID profissionalId, Consulta.StatusConsulta status);
+
+    List<Consulta> findByProfissional(Profissional profissional);
+    
+    
     
 }

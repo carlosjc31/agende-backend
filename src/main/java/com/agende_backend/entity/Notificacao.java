@@ -53,6 +53,6 @@ public class Notificacao {
     private LocalDateTime dataEnvio;
 
     public enum TipoNotificacao {
-        LEMBRETE, CONFIRMACAO, CANCELAMENTO, AVALIACAO, SISTEMA
+        LEMBRETE, CONFIRMACAO, CANCELAMENTO, AVALIACAO, SISTEMA, APROVACAO, REJEICAO
     }
 }
