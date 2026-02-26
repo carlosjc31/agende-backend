@@ -21,7 +21,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ConsultaService {
-    
+
     @Autowired
     private ConsultaRepository consultaRepository;
 
@@ -37,9 +37,11 @@ public class ConsultaService {
     @Transactional
     public ConsultaResponse agendarConsulta(UUID pacienteId, ConsultaRequest request) {
         // Buscar paciente e profissional
+        @SuppressWarnings("null")
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
+        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(request.getProfissionalId())
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -69,7 +71,7 @@ public class ConsultaService {
         notificacaoService.enviarNotificacaoConsultaAgendada(consulta);
 
         return convertToResponse(consulta);
-    }    
+    }
     public List<ConsultaResponse> listarConsultasPaciente(UUID pacienteId) {
         List<Consulta> consultas = consultaRepository.findByPacienteIdOrderByDataConsultaDescHoraConsultaDesc(pacienteId);
         return consultas.stream()
@@ -86,6 +88,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse cancelarConsulta(UUID consultaId, String motivo) {
+        @SuppressWarnings("null")
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
@@ -132,8 +135,9 @@ public class ConsultaService {
         response.setProfissionalHospital(consulta.getProfissional().getHospitalClinica());
 
         return response;
-    }    
+    }
 
+    @SuppressWarnings("null")
     public List<ConsultaResponse> listarConsultasProfissional(UUID profissionalId) {
     profissionalRepository.findById(profissionalId)
             .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
@@ -150,6 +154,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse confirmarConsulta(UUID consultaId) {
+        @SuppressWarnings("null")
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
@@ -180,6 +185,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse marcarRealizada(UUID consultaId) {
+        @SuppressWarnings("null")
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.agende_backend.dto.DashboardStatsResponse;
 import com.agende_backend.dto.ProfissionalResponse;
 import com.agende_backend.entity.Notificacao;
@@ -63,8 +64,11 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+
     @Transactional
     public void aprovarProfissional(UUID profissionalId) {
+
+        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -76,7 +80,7 @@ public class AdminService {
         notificacao.setUsuario(profissional.getUsuario());
         notificacao.setTitulo("Cadastro Aprovado!");
         notificacao.setMensagem("Seu cadastro foi aprovado. Agora você pode receber consultas.");
-        
+
         notificacao.setTipo(Notificacao.TipoNotificacao.APROVACAO);
         notificacao.setLida(false);
         notificacao.setDataEnvio(LocalDateTime.now());
@@ -85,6 +89,7 @@ public class AdminService {
 
     @Transactional
     public void rejeitarProfissional(UUID profissionalId, String motivo) {
+        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -93,7 +98,7 @@ public class AdminService {
         notificacao.setUsuario(profissional.getUsuario());
         notificacao.setTitulo("Cadastro não aprovado");
         notificacao.setMensagem("Seu cadastro não foi aprovado. Motivo: " + motivo);
-        
+
         notificacao.setTipo(Notificacao.TipoNotificacao.REJEICAO);
         notificacao.setLida(false);
         notificacao.setDataEnvio(LocalDateTime.now());
@@ -107,8 +112,10 @@ public class AdminService {
         return usuarioRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void deletarUsuario(UUID usuarioId) {
+        
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -139,5 +146,6 @@ public class AdminService {
 
         return response;
     }
-    
+
 }
+

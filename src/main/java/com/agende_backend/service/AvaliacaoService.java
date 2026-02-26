@@ -26,6 +26,7 @@ public class AvaliacaoService {
     @Transactional
     public Avaliacao avaliarConsulta(UUID pacienteId, AvaliacaoRequest request) {
         // Verificar se consulta existe e pertence ao paciente
+        @SuppressWarnings("null")
         Consulta consulta = consultaRepository.findById(request.getConsultaId())
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 

@@ -43,6 +43,7 @@ public class ProfissionalService {
     }
 
     public ProfissionalResponse buscarPorId(UUID id) {
+        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
         return convertToResponse(profissional);

@@ -18,12 +18,15 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
+    // injeta o valor da chave secreta do application.properties
+    @Value("${jwt.secret}") 
     private String secret;
 
-    @Value("${jwt.expiration}")
+    // injeta o valor do tempo de expiração do token do application.properties
+    @Value("${jwt.expiration}") 
     private Long expiration;
 
+    // Gera a chave de assinatura a partir da chave secreta
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }

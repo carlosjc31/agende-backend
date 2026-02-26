@@ -15,6 +15,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.Convert;
+import com.agende_backend.security.AesEncryptor;
 
 @Entity
 @Table(name = "pacientes")
@@ -23,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Paciente {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -35,7 +37,8 @@ public class Paciente {
     @Column(name = "nome_completo", nullable = false)
     private String nomeCompleto;
 
-    @Column(unique = true, nullable = false)
+    @Convert(converter = AesEncryptor.class)
+    @Column(unique = true, nullable = false, length = 255) // Aumentamos o length porque o Base64 ocupa mais espaço
     private String cpf;
 
     @Column(name = "data_nascimento", nullable = false)
@@ -43,7 +46,8 @@ public class Paciente {
 
     private String telefone;
 
-    @Column(length = 15)
+    @Convert(converter = AesEncryptor.class)
+    @Column(length = 255)
     private String cns; // Cartão Nacional de Saúde
 
     @Column(columnDefinition = "TEXT")
@@ -59,5 +63,5 @@ public class Paciente {
     @Column(name = "foto_url", columnDefinition = "TEXT")
     private String fotoUrl;
 
-    
 }
+

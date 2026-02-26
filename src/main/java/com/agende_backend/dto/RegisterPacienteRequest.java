@@ -1,18 +1,9 @@
-package com.agende_backend.controller;
+package com.agende_backend.dto;
 
 import java.time.LocalDate;
+import jakarta.validation.constraints.*;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
-@Data
-public class RegisterPacienteRequest {
-
+    public class RegisterPacienteRequest {
     @NotBlank(message = "Nome completo é obrigatório")
     private String nomeCompleto;
 
@@ -25,7 +16,6 @@ public class RegisterPacienteRequest {
     private String senha;
 
     @NotBlank(message = "CPF é obrigatório")
-    @Pattern(regexp = "\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}", message = "CPF inválido")
     private String cpf;
 
     @NotNull(message = "Data de nascimento é obrigatória")
@@ -36,10 +26,42 @@ public class RegisterPacienteRequest {
     private String telefone;
 
     private String cns;
+    public String getCns() {
+      return cns;
+    }
     private String endereco;
+    public String getEndereco() {
+      return endereco;
+    }
     private String cidade;
+    public String getCidade() {
+      return cidade;
+    }
     private String estado;
+    public String getEstado() {
+      return estado;
+    }
     private String cep;
-    
+    public String getCep() {
+      return cep;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getCpf() {
+        return cpf;
+    }
+    public CharSequence getSenha() {
+        return senha;
+    }
+    public String getNomeCompleto() {
+        return nomeCompleto;
+    }
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+    public String getTelefone() {
+        return telefone;
+    }
 
 }

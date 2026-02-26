@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.agende_backend.controller.RegisterPacienteRequest;
+//import com.agende_backend.controller.RegisterPacienteRequest;
 import com.agende_backend.dto.AuthResponse;
 import com.agende_backend.dto.LoginRequest;
 import com.agende_backend.entity.Paciente;
@@ -17,6 +17,7 @@ import com.agende_backend.repository.UsuarioRepository;
 import com.agende_backend.security.JwtUtil;
 
 import jakarta.transaction.Transactional;
+//import jakarta.validation.Valid;
 
 @Service
 public class AuthService {
@@ -61,7 +62,7 @@ public class AuthService {
 
 
     @Transactional
-    public AuthResponse registerPaciente(RegisterPacienteRequest request) {
+    public AuthResponse registerPaciente(com.agende_backend.dto.RegisterPacienteRequest request) {
         // Validações
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email já cadastrado");
