@@ -16,11 +16,16 @@ public class AuthResponse {
     private String perfil;
     private UUID perfilId; // ID do Paciente ou Profissional
 
-    public AuthResponse(String token, UUID usuarioId, String email, String perfil, UUID perfilId) {
+    private String nome;
+    private String telefone;
+
+    public AuthResponse(String token, UUID usuarioId, String email, String perfil, UUID perfilId, String nome, String telefone) {
         this.token = token;
         this.usuarioId = usuarioId;
         this.email = email;
         this.perfil = perfil;
         this.perfilId = perfilId;
+        this.nome = nome;
+        this.telefone = telefone;
     }
 }

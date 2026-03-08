@@ -45,18 +45,26 @@ public class AuthService {
         String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().name());
 
         java.util.UUID perfilId = null;
-        if (usuario.getPerfil() == Usuario.PerfilUsuario.PACIENTE) {
-            perfilId = pacienteRepository.findByUsuarioId(usuario.getId())
-                    .map(Paciente::getId)
-                    .orElse(null);
-        }
+        String nome = null;
+        String telefone = null;
 
+        if (usuario.getPerfil() == Usuario.PerfilUsuario.PACIENTE) {
+          var paciente = pacienteRepository.findByUsuarioId(usuario.getId());
+          if (paciente.isPresent()) {
+              var paxiente = paciente.get();
+              perfilId = paxiente.getId();
+              nome = paxiente.getNomeCompleto();
+              telefone = paxiente.getTelefone();
+          }
+        }
         return new AuthResponse(
             token,
             usuario.getId(),
             usuario.getEmail(),
             usuario.getPerfil().name(),
-            perfilId
+            perfilId,
+            nome,
+            telefone
         );
     }
 
@@ -102,7 +110,9 @@ public class AuthService {
             usuario.getId(),
             usuario.getEmail(),
             usuario.getPerfil().name(),
-            paciente.getId()
+            paciente.getId(),
+            paciente.getNomeCompleto(),
+            paciente.getTelefone()
         );
     }
 
