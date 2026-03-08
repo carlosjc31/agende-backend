@@ -3,7 +3,8 @@ package com.agende_backend.dto;
 import java.time.LocalDate;
 import jakarta.validation.constraints.*;
 
-    public class RegisterPacienteRequest {
+public class RegisterPacienteRequest {
+
     @NotBlank(message = "Nome completo é obrigatório")
     private String nomeCompleto;
 
@@ -26,42 +27,38 @@ import jakarta.validation.constraints.*;
     private String telefone;
 
     private String cns;
-    public String getCns() {
-      return cns;
-    }
     private String endereco;
-    public String getEndereco() {
-      return endereco;
-    }
     private String cidade;
-    public String getCidade() {
-      return cidade;
-    }
     private String estado;
-    public String getEstado() {
-      return estado;
-    }
     private String cep;
-    public String getCep() {
-      return cep;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public String getCpf() {
-        return cpf;
-    }
-    public CharSequence getSenha() {
-        return senha;
-    }
-    public String getNomeCompleto() {
-        return nomeCompleto;
-    }
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-    public String getTelefone() {
-        return telefone;
-    }
 
+    // ==========================================
+    // GETTERS (Para o Java ler os dados)
+    // ==========================================
+    public String getNomeCompleto() { return nomeCompleto; }
+    public String getEmail() { return email; }
+    public String getSenha() { return senha; }
+    public String getCpf() { return cpf; }
+    public LocalDate getDataNascimento() { return dataNascimento; }
+    public String getTelefone() { return telefone; }
+    public String getCns() { return cns; }
+    public String getEndereco() { return endereco; }
+    public String getCidade() { return cidade; }
+    public String getEstado() { return estado; }
+    public String getCep() { return cep; }
+
+    // ==========================================
+    // SETTERS (O segredo para receber os dados do App!)
+    // ==========================================
+    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
+    public void setEmail(String email) { this.email = email; }
+    public void setSenha(String senha) { this.senha = senha; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+    public void setDataNascimento(LocalDate dataNascimento) { this.dataNascimento = dataNascimento; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public void setCns(String cns) { this.cns = cns; }
+    public void setEndereco(String endereco) { this.endereco = endereco; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public void setCep(String cep) { this.cep = cep; }
 }
