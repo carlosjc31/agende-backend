@@ -29,6 +29,9 @@ public class AuthService {
     private PacienteRepository pacienteRepository;
 
     @Autowired
+    private com.agende_backend.repository.ProfissionalRepository profissionalRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -57,6 +60,17 @@ public class AuthService {
               telefone = paxiente.getTelefone();
           }
         }
+
+        else if (usuario.getPerfil() == Usuario.PerfilUsuario.PROFISSIONAL) {
+          var profissional = profissionalRepository.findByUsuarioId(usuario.getId());
+          if (profissional.isPresent()) {
+              var prof = profissional.get();
+              perfilId = prof.getId(); // Agora sim, pega o ID da tabela profissionais!
+              nome = prof.getNomeCompleto();
+              telefone = prof.getTelefone();
+          }
+        }
+
         return new AuthResponse(
             token,
             usuario.getId(),
