@@ -37,11 +37,9 @@ public class ConsultaService {
     @Transactional
     public ConsultaResponse agendarConsulta(UUID pacienteId, ConsultaRequest request) {
         // Buscar paciente e profissional
-        @SuppressWarnings("null")
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(request.getProfissionalId())
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -88,7 +86,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse cancelarConsulta(UUID consultaId, String motivo) {
-        @SuppressWarnings("null")
+
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
@@ -137,7 +135,6 @@ public class ConsultaService {
         return response;
     }
 
-    @SuppressWarnings("null")
     public List<ConsultaResponse> listarConsultasProfissional(UUID profissionalId) {
     profissionalRepository.findById(profissionalId)
             .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
@@ -154,7 +151,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse confirmarConsulta(UUID consultaId) {
-        @SuppressWarnings("null")
+
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
@@ -185,7 +182,7 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponse marcarRealizada(UUID consultaId) {
-        @SuppressWarnings("null")
+
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 

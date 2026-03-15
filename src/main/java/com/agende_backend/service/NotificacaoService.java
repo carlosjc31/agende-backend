@@ -97,7 +97,6 @@ public class NotificacaoService {
 
     @Transactional
     public void marcarComoLida(UUID notificacaoId) {
-        @SuppressWarnings("null")
         Notificacao notificacao = notificacaoRepository.findById(notificacaoId)
                 .orElseThrow(() -> new RuntimeException("Notificação não encontrada"));
         notificacao.setLida(true);

@@ -1,0 +1,234 @@
+-- ============================================
+-- SCRIPT DE CRIAÇÃO DO BANCO DE DADOS - PostgreSQL
+-- Aplicativo: Agende
+-- ============================================
+
+-- Criação do banco de dados
+CREATE DATABASE agende_db;
+
+-- Conectar ao banco
+\c agende_db;
+
+-- Habilitar extensão para UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- ============================================
+-- TABELA: USUARIOS
+-- ============================================
+CREATE TABLE usuarios (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL, -- Será armazenada com BCrypt
+    perfil VARCHAR(50) NOT NULL CHECK (perfil IN ('PACIENTE', 'PROFISSIONAL', 'ADMINISTRADOR')),
+    ativo BOOLEAN DEFAULT TRUE,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- TABELA: PACIENTES
+-- ============================================
+CREATE TABLE pacientes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    usuario_id UUID UNIQUE NOT NULL,
+    nome_completo VARCHAR(255) NOT NULL,
+    cpf VARCHAR(255) UNIQUE NOT NULL,
+    data_nascimento DATE NOT NULL,
+    telefone VARCHAR(20),
+    cns VARCHAR(15), -- Cartão Nacional de Saúde
+    endereco TEXT,
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
+    cep VARCHAR(9),
+    foto_url TEXT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: PROFISSIONAIS
+-- ============================================
+CREATE TABLE profissionais (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    usuario_id UUID UNIQUE NOT NULL,
+    nome_completo VARCHAR(255) NOT NULL,
+    crm VARCHAR(20) UNIQUE NOT NULL,
+    especialidade VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20),
+    bio TEXT,
+    anos_experiencia INTEGER,
+    valor_consulta DECIMAL(10,2),
+    foto_url TEXT,
+    hospital_clinica VARCHAR(255),
+    endereco TEXT,
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
+    cep VARCHAR(9),
+    validado BOOLEAN DEFAULT FALSE,
+    avaliacao_media DECIMAL(3,2) DEFAULT 0.0,
+    total_avaliacoes INTEGER DEFAULT 0,
+    total_pacientes INTEGER DEFAULT 0,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: FORMACAO_PROFISSIONAL
+-- ============================================
+CREATE TABLE formacao_profissional (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profissional_id UUID NOT NULL,
+    instituicao VARCHAR(255) NOT NULL,
+    curso VARCHAR(255) NOT NULL,
+    ano_conclusao INTEGER,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: SERVICOS_OFERECIDOS
+-- ============================================
+CREATE TABLE servicos_oferecidos (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profissional_id UUID NOT NULL,
+    nome_servico VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: HORARIOS_DISPONIVEIS
+-- ============================================
+CREATE TABLE horarios_disponiveis (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profissional_id UUID NOT NULL,
+    dia_semana INTEGER NOT NULL CHECK (dia_semana BETWEEN 0 AND 6), -- 0=Domingo, 6=Sábado
+    hora_inicio TIME NOT NULL,
+    hora_fim TIME NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: CONSULTAS
+-- ============================================
+CREATE TABLE consultas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    paciente_id UUID NOT NULL,
+    profissional_id UUID NOT NULL,
+    data_consulta DATE NOT NULL,
+    hora_consulta TIME NOT NULL,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('AGENDADA', 'CONFIRMADA', 'CANCELADA', 'REALIZADA', 'FALTOU')),
+    motivo_consulta TEXT,
+    observacoes TEXT,
+    valor DECIMAL(10,2),
+    lembrete_enviado BOOLEAN DEFAULT FALSE,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_cancelamento TIMESTAMP,
+    motivo_cancelamento TEXT,
+    FOREIGN KEY (paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: AVALIACOES
+-- ============================================
+CREATE TABLE avaliacoes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    consulta_id UUID UNIQUE NOT NULL,
+    paciente_id UUID NOT NULL,
+    profissional_id UUID NOT NULL,
+    nota INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+    comentario TEXT,
+    data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (consulta_id) REFERENCES consultas(id) ON DELETE CASCADE,
+    FOREIGN KEY (paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: PRONTUARIOS
+-- ============================================
+CREATE TABLE prontuarios (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    paciente_id UUID NOT NULL,
+    consulta_id UUID,
+    profissional_id UUID NOT NULL,
+    tipo_registro VARCHAR(50) NOT NULL CHECK (tipo_registro IN ('CONSULTA', 'EXAME', 'RECEITA', 'ATESTADO')),
+    titulo VARCHAR(255) NOT NULL,
+    conteudo TEXT NOT NULL, -- Será criptografado com AES-256
+    arquivo_url TEXT,
+    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (consulta_id) REFERENCES consultas(id) ON DELETE SET NULL,
+    FOREIGN KEY (profissional_id) REFERENCES profissionais(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- TABELA: NOTIFICACOES
+-- ============================================
+CREATE TABLE notificacoes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    usuario_id UUID NOT NULL,
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('LEMBRETE', 'CONFIRMACAO', 'CANCELAMENTO', 'AVALIACAO', 'SISTEMA')),
+    titulo VARCHAR(255) NOT NULL,
+    mensagem TEXT NOT NULL,
+    lida BOOLEAN DEFAULT FALSE,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- ÍNDICES PARA OTIMIZAÇÃO
+-- ============================================
+CREATE INDEX idx_usuarios_email ON usuarios(email);
+CREATE INDEX idx_pacientes_cpf ON pacientes(cpf);
+CREATE INDEX idx_profissionais_crm ON profissionais(crm);
+CREATE INDEX idx_profissionais_especialidade ON profissionais(especialidade);
+CREATE INDEX idx_consultas_data ON consultas(data_consulta);
+CREATE INDEX idx_consultas_status ON consultas(status);
+CREATE INDEX idx_consultas_paciente ON consultas(paciente_id);
+CREATE INDEX idx_consultas_profissional ON consultas(profissional_id);
+CREATE INDEX idx_notificacoes_usuario ON notificacoes(usuario_id);
+CREATE INDEX idx_notificacoes_lida ON notificacoes(lida);
+
+-- ============================================
+-- TRIGGERS PARA ATUALIZAÇÃO AUTOMÁTICA
+-- ============================================
+
+-- Trigger para atualizar ultima_atualizacao em usuarios
+CREATE OR REPLACE FUNCTION atualizar_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.ultima_atualizacao = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_atualizar_usuarios
+BEFORE UPDATE ON usuarios
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_timestamp();
+
+-- Trigger para atualizar avaliação média do profissional
+CREATE OR REPLACE FUNCTION atualizar_avaliacao_profissional()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE profissionais
+    SET avaliacao_media = (
+        SELECT AVG(nota)::DECIMAL(3,2)
+        FROM avaliacoes
+        WHERE profissional_id = NEW.profissional_id
+    ),
+    total_avaliacoes = (
+        SELECT COUNT(*)
+        FROM avaliacoes
+        WHERE profissional_id = NEW.profissional_id
+    )
+    WHERE id = NEW.profissional_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_atualizar_avaliacao
+AFTER INSERT ON avaliacoes
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_avaliacao_profissional();

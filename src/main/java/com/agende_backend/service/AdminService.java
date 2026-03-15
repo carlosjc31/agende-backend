@@ -68,7 +68,6 @@ public class AdminService {
     @Transactional
     public void aprovarProfissional(UUID profissionalId) {
 
-        @SuppressWarnings("null")
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -89,7 +88,7 @@ public class AdminService {
 
     @Transactional
     public void rejeitarProfissional(UUID profissionalId, String motivo) {
-        @SuppressWarnings("null")
+
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
@@ -112,10 +111,10 @@ public class AdminService {
         return usuarioRepository.findAll();
     }
 
-    @SuppressWarnings("null")
+
     @Transactional
     public void deletarUsuario(UUID usuarioId) {
-        
+
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
