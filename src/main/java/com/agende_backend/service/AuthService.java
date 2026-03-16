@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 //import com.agende_backend.controller.RegisterPacienteRequest;
 import com.agende_backend.dto.AuthResponse;
 import com.agende_backend.dto.LoginRequest;
+import com.agende_backend.dto.RegisterProfissionalRequest;
 import com.agende_backend.entity.Paciente;
+import com.agende_backend.entity.Profissional;
 import com.agende_backend.entity.Usuario;
 import com.agende_backend.repository.PacienteRepository;
 import com.agende_backend.repository.UsuarioRepository;
@@ -127,6 +129,41 @@ public class AuthService {
             paciente.getId(),
             paciente.getNomeCompleto(),
             paciente.getTelefone()
+        );
+    }
+
+    // Adicione isto no seu AuthService.java
+    @Transactional
+    public AuthResponse registerProfissional(RegisterProfissionalRequest request) {
+        // 1. Verifica se o email já existe na base de Usuários
+        if (usuarioRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Este email já está cadastrado");
+        }
+
+        // 2. Cria a conta de Login (Usuário)
+        Usuario usuario = new Usuario();
+        usuario.setEmail(request.getEmail());
+        usuario.setSenha(passwordEncoder.encode(request.getSenha()));
+        usuario = usuarioRepository.save(usuario);
+
+        // 3. Cria o Perfil do Médico
+        Profissional profissional = new Profissional();
+        profissional.setUsuario(usuario);
+        profissional.setNomeCompleto(request.getNomeCompleto());
+        profissional.setTelefone(request.getTelefone());
+        profissional.setEspecialidade(request.getEspecialidade());
+        profissional.setCrm(request.getCrm());
+        profissionalRepository.save(profissional);
+
+        // 4. Retorna a resposta (Adapte este retorno ao método que você já usa no Paciente)
+        return new AuthResponse(
+            " ", // Certifique-se de que a variável token existe, ou passe "" (vazio) se não fizer login automático
+            usuario.getId(),
+            usuario.getEmail(),
+            usuario.getPerfil().name(), // Pega a Role (PROFISSIONAL)
+            profissional.getId(), // O ID do médico
+            profissional.getNomeCompleto(),
+            profissional.getTelefone()
         );
     }
 

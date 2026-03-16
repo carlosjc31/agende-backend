@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.agende_backend.dto.AuthResponse;
 import com.agende_backend.dto.LoginRequest;
 import com.agende_backend.dto.RegisterPacienteRequest;
+import com.agende_backend.dto.RegisterProfissionalRequest;
 import com.agende_backend.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -37,6 +38,19 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             // Retorna o erro específico (ex: "Email já registado") para a app mostrar ao utilizador
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // NOVO Endpoint para cadastrar o Médico
+    @PostMapping("/register/profissional")
+    public ResponseEntity<?> registerProfissional(@Valid @RequestBody RegisterProfissionalRequest request) {
+        try {
+            AuthResponse response = authService.registerProfissional(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
