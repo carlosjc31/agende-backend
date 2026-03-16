@@ -144,6 +144,7 @@ public class AuthService {
         Usuario usuario = new Usuario();
         usuario.setEmail(request.getEmail());
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
+        usuario.setPerfil(Usuario.PerfilUsuario.PROFISSIONAL);
         usuario = usuarioRepository.save(usuario);
 
         // 3. Cria o Perfil do Médico
