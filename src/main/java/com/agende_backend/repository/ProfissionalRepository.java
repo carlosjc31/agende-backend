@@ -27,6 +27,8 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, UUID
 
     List<Profissional> findByValidadoTrue();
 
+    List<Profissional> findByValidadoFalse();
+
     List<Profissional> findByEspecialidadeContainingIgnoreCaseAndValidadoTrue(String especialidade);
 
     @Query("SELECT p FROM Profissional p WHERE " +

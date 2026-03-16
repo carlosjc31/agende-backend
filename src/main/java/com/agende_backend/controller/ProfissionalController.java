@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,5 +56,23 @@ public class ProfissionalController {
     public ResponseEntity<List<ProfissionalResponse>> listarMelhoresAvaliados() {
         List<ProfissionalResponse> profissionais = profissionalService.listarMelhoresAvaliados();
         return ResponseEntity.ok(profissionais);
+    }
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<ProfissionalResponse>> listarPendentes() {
+        List<ProfissionalResponse> pendentes = profissionalService.listarPendentes();
+        return ResponseEntity.ok(pendentes);
+    }
+
+    @PatchMapping("/{id}/aprovar")
+    public ResponseEntity<Void> aprovarProfissional(@PathVariable UUID id) {
+        profissionalService.aprovarProfissional(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/rejeitar")
+    public ResponseEntity<Void> rejeitarProfissional(@PathVariable UUID id) {
+        profissionalService.rejeitarProfissional(id);
+        return ResponseEntity.ok().build();
     }
 }

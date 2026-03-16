@@ -11,6 +11,8 @@ import com.agende_backend.dto.ProfissionalResponse;
 import com.agende_backend.entity.Profissional;
 import com.agende_backend.repository.ProfissionalRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProfissionalService {
 
@@ -46,6 +48,31 @@ public class ProfissionalService {
         Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
         return convertToResponse(profissional);
+    }
+
+    // 1. Lista apenas os médicos que têm validado = false
+    public List<ProfissionalResponse> listarPendentes() {
+        List<Profissional> pendentes = profissionalRepository.findByValidadoFalse();
+        return pendentes.stream()
+                .map(this::convertToResponse) // Usa a mesma conversão que você já tem!
+                .collect(Collectors.toList());
+    }
+
+    // 2. Aprovar (Muda o validado para true)
+    @Transactional
+    public void aprovarProfissional(UUID id) {
+        Profissional profissional = profissionalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+        profissional.setValidado(true);
+        profissionalRepository.save(profissional);
+    }
+
+    // 3. Rejeitar (Exclui o pré-cadastro)
+    @Transactional
+    public void rejeitarProfissional(UUID id) {
+        Profissional profissional = profissionalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+        profissionalRepository.delete(profissional);
     }
 
     private ProfissionalResponse convertToResponse(Profissional profissional) {
