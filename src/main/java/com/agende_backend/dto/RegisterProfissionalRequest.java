@@ -17,9 +17,6 @@ public class RegisterProfissionalRequest {
     @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
-    @NotBlank(message = "CPF é obrigatório")
-    private String cpf;
-
     @NotBlank(message = "Telefone é obrigatório")
     private String telefone;
 
