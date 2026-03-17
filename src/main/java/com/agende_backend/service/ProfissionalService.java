@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agende_backend.dto.AtualizarProfissionalRequest;
 import com.agende_backend.dto.ProfissionalResponse;
 import com.agende_backend.entity.Profissional;
 import com.agende_backend.repository.ProfissionalRepository;
@@ -95,5 +96,25 @@ public class ProfissionalService {
         response.setTotalPacientes(profissional.getTotalPacientes());
         response.setDisponivel(true); // Pode adicionar lógica adicional
         return response;
+    }
+
+    public ProfissionalResponse atualizarProfissional(UUID id, AtualizarProfissionalRequest request) {
+        Profissional profissional = profissionalRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+
+        // Atualiza apenas os campos que o app enviou
+        if (request.getTelefone() != null) profissional.setTelefone(request.getTelefone());
+        if (request.getBio() != null) profissional.setBio(request.getBio());
+        if (request.getValorConsulta() != null) profissional.setValorConsulta(request.getValorConsulta());
+        if (request.getHospitalClinica() != null) profissional.setHospitalClinica(request.getHospitalClinica());
+        if (request.getEndereco() != null) profissional.setEndereco(request.getEndereco());
+        if (request.getCidade() != null) profissional.setCidade(request.getCidade());
+        if (request.getEstado() != null) profissional.setEstado(request.getEstado());
+        if (request.getCep() != null) profissional.setCep(request.getCep());
+
+        profissionalRepository.save(profissional);
+
+        // Retorna os dados atualizados (use o seu método existente de converter para Response)
+        return convertToResponse(profissional);
     }
 }

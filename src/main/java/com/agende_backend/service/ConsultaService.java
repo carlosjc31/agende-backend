@@ -181,13 +181,18 @@ public class ConsultaService {
 
 
     @Transactional
-    public ConsultaResponse marcarRealizada(UUID consultaId) {
+    public ConsultaResponse marcarRealizada(UUID consultaId, String observacoes) {
 
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
         consulta.setStatus(Consulta.StatusConsulta.REALIZADA);
-        consultaRepository.save(consulta);
+
+        if (observacoes != null && !observacoes.trim().isEmpty()) {
+            consulta.setObservacoes(observacoes);
+        }
+
+        consulta = consultaRepository.save(consulta);
 
         return convertToResponse(consulta);
     }

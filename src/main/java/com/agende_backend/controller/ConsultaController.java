@@ -82,14 +82,14 @@ public ResponseEntity<ConsultaResponse> confirmarConsulta(@PathVariable UUID con
 }
 
 @PatchMapping("/{consultaId}/marcar-realizada")
-public ResponseEntity<ConsultaResponse> marcarRealizada(@PathVariable UUID consultaId) {
+public ResponseEntity<ConsultaResponse> marcarRealizada(@PathVariable UUID consultaId, @RequestParam(required = false) String observacoes) {
     try {
-        ConsultaResponse response = consultaService.marcarRealizada(consultaId);
+        ConsultaResponse response = consultaService.marcarRealizada(consultaId, observacoes);
         return ResponseEntity.ok(response);
     } catch (Exception e) {
         return ResponseEntity.badRequest().build();
     }
-} 
-    
+}
+
 
 }

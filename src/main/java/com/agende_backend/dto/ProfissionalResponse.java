@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProfissionalResponse {
 
+
     private UUID id;
     private String nomeCompleto;
     // Usado no ProfissionalService
@@ -40,5 +41,5 @@ public class ProfissionalResponse {
     private String ufRegistro;
     private String email;
     private Boolean validado;
-    
+
 }
