@@ -12,6 +12,7 @@ import com.agende_backend.entity.Consulta;
 import com.agende_backend.entity.Notificacao;
 import com.agende_backend.repository.NotificacaoRepository;
 
+
 import jakarta.transaction.Transactional;
 
 
@@ -22,6 +23,7 @@ public class NotificacaoService {
 
     @Autowired
     private NotificacaoRepository notificacaoRepository;
+
 
     @Transactional
     public void enviarNotificacaoConsultaAgendada(Consulta consulta) {
