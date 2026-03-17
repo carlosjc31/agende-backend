@@ -21,7 +21,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             AuthResponse response = authService.login(request);
             return ResponseEntity.ok(response);
@@ -53,7 +53,8 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            e.printStackTrace(); // Isto vai imprimir o erro gigante no terminal do Java
+            return ResponseEntity.internalServerError().body("Erro no servidor: " + e.getMessage());
         }
     }
 }
