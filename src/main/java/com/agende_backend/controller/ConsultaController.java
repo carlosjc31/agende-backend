@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agende_backend.dto.ConsultaRequest;
 import com.agende_backend.dto.ConsultaResponse;
+import com.agende_backend.dto.ProfissionalDashboardResponse;
 import com.agende_backend.service.ConsultaService;
 
 import jakarta.validation.Valid;
@@ -65,31 +66,40 @@ public class ConsultaController {
         }
     }
 
-@GetMapping("/profissional/{profissionalId}")
-public ResponseEntity<List<ConsultaResponse>> listarConsultasProfissional(@PathVariable UUID profissionalId) {
-    List<ConsultaResponse> consultas = consultaService.listarConsultasProfissional(profissionalId);
-    return ResponseEntity.ok(consultas);
-}
-
-@PatchMapping("/{consultaId}/confirmar")
-public ResponseEntity<ConsultaResponse> confirmarConsulta(@PathVariable UUID consultaId) {
-    try {
-        ConsultaResponse response = consultaService.confirmarConsulta(consultaId);
-        return ResponseEntity.ok(response);
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().build();
+    @GetMapping("/profissional/{profissionalId}")
+    public ResponseEntity<List<ConsultaResponse>> listarConsultasProfissional(@PathVariable UUID profissionalId) {
+        List<ConsultaResponse> consultas = consultaService.listarConsultasProfissional(profissionalId);
+        return ResponseEntity.ok(consultas);
     }
-}
 
-@PatchMapping("/{consultaId}/marcar-realizada")
-public ResponseEntity<ConsultaResponse> marcarRealizada(@PathVariable UUID consultaId, @RequestParam(required = false) String observacoes) {
-    try {
-        ConsultaResponse response = consultaService.marcarRealizada(consultaId, observacoes);
-        return ResponseEntity.ok(response);
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().build();
+    @PatchMapping("/{consultaId}/confirmar")
+    public ResponseEntity<ConsultaResponse> confirmarConsulta(@PathVariable UUID consultaId) {
+        try {
+            ConsultaResponse response = consultaService.confirmarConsulta(consultaId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
+
+    @PatchMapping("/{consultaId}/marcar-realizada")
+    public ResponseEntity<ConsultaResponse> marcarRealizada(@PathVariable UUID consultaId, @RequestParam(required = false) String observacoes) {
+        try {
+            ConsultaResponse response = consultaService.marcarRealizada(consultaId, observacoes);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/profissional/{profissionalId}/dashboard")
+    public ResponseEntity<ProfissionalDashboardResponse> getDashboard(@PathVariable UUID profissionalId) {
+      return ResponseEntity.ok(consultaService.getDashboardProfissional(profissionalId));
+    }
+
+    @GetMapping("/admin/consultas/hoje")
+    public ResponseEntity<List<ConsultaResponse>> listarConsultasHojeAdmin() {
+        List<ConsultaResponse> consultas = consultaService.listarTodasConsultasDoDia();
+        return ResponseEntity.ok(consultas);
 }
-
-
 }

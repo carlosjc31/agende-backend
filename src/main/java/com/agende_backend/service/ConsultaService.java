@@ -1,5 +1,6 @@
 package com.agende_backend.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.agende_backend.dto.ConsultaRequest;
 import com.agende_backend.dto.ConsultaResponse;
+import com.agende_backend.dto.ProfissionalDashboardResponse;
 import com.agende_backend.entity.Consulta;
 import com.agende_backend.entity.Paciente;
 import com.agende_backend.entity.Profissional;
@@ -196,4 +198,33 @@ public class ConsultaService {
 
         return convertToResponse(consulta);
     }
+
+    public ProfissionalDashboardResponse getDashboardProfissional(UUID profissionalId) {
+    LocalDate hoje = LocalDate.now();
+
+    long hojeCount = consultaRepository.countByDataConsultaAndProfissionalId(hoje, profissionalId);
+
+    long pendentes = consultaRepository.countByDataConsultaAndProfissionalIdAndStatus(
+        hoje, profissionalId, Consulta.StatusConsulta.PENDENTE);
+
+    long confirmadas = consultaRepository.countByDataConsultaAndProfissionalIdAndStatus(
+        hoje, profissionalId, Consulta.StatusConsulta.CONFIRMADA);
+
+    long realizadas = consultaRepository.countByDataConsultaAndProfissionalIdAndStatus(
+        hoje, profissionalId, Consulta.StatusConsulta.REALIZADA);
+
+    long canceladas = consultaRepository.countByDataConsultaAndProfissionalIdAndStatus(
+        hoje, profissionalId, Consulta.StatusConsulta.CANCELADA);
+
+    return new ProfissionalDashboardResponse(hojeCount, pendentes, confirmadas, realizadas, canceladas);
+  }
+
+  public List<ConsultaResponse> listarTodasConsultasDoDia() {
+    LocalDate hoje = LocalDate.now();
+    List<Consulta> consultas = consultaRepository.findByDataConsulta(hoje);
+
+    return consultas.stream()
+            .map(this::convertToResponse) // Usa o seu conversor que já extrai nomes de médico e paciente
+            .collect(Collectors.toList());
+}
 }

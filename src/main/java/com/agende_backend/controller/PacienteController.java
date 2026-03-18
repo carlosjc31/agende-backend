@@ -1,5 +1,6 @@
 package com.agende_backend.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agende_backend.dto.AtualizarPacienteRequest;
 import com.agende_backend.dto.PacienteResponse;
+
 import com.agende_backend.service.PacienteService;
 
 @RestController
 @RequestMapping("/api/pacientes")
 @CrossOrigin(origins = "*")
 public class PacienteController {
-@Autowired
+    @Autowired
     private PacienteService pacienteService;
 
     @GetMapping("/{id}")
@@ -44,4 +46,14 @@ public class PacienteController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<PacienteResponse>> listarTodos() {
+    try {
+        List<PacienteResponse> pacientes = pacienteService.listarTodos();
+        return ResponseEntity.ok(pacientes);
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(null);
+    }
+  }
 }

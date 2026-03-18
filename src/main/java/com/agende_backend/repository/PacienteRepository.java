@@ -1,5 +1,6 @@
 package com.agende_backend.repository;
 
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,5 +17,5 @@ public interface PacienteRepository extends JpaRepository<Paciente, UUID> {
 
     Boolean existsByCpf(String cpf);
 
-   
+  
 }

@@ -1,6 +1,8 @@
 package com.agende_backend.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ import com.agende_backend.repository.PacienteRepository;
 
 @Service
 public class PacienteService {
-@Autowired
+    @Autowired
     private PacienteRepository pacienteRepository;
 
     public PacienteResponse buscarPorId(UUID id) {
@@ -59,4 +61,12 @@ public class PacienteService {
 
         return response;
     }
+
+    public List<PacienteResponse> listarTodos() {
+    return pacienteRepository.findAll().stream()
+        .map(this::convertToResponse)
+        .collect(Collectors.toList());
+    }
+
+
 }

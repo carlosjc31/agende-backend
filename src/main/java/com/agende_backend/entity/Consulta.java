@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Consulta {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -75,8 +75,8 @@ public class Consulta {
     private String motivoCancelamento;
 
     public enum StatusConsulta {
-        AGENDADA, CONFIRMADA, CANCELADA, REALIZADA, FALTOU
+        AGENDADA, CONFIRMADA, CANCELADA, REALIZADA, FALTOU, PENDENTE
     }
 
-    
+
 }

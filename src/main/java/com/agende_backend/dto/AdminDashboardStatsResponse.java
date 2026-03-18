@@ -3,8 +3,8 @@ package com.agende_backend.dto;
 import lombok.Data;
 
 @Data
-public class DashboardStatsResponse {
-    
+public class AdminDashboardStatsResponse {
+
     private Long totalUsuarios;
     private Long totalPacientes;
     private Long totalProfissionais;

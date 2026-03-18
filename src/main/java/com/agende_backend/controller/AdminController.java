@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agende_backend.dto.DashboardStatsResponse;
+import com.agende_backend.dto.AdminDashboardStatsResponse;
 import com.agende_backend.dto.ProfissionalResponse;
 import com.agende_backend.service.AdminService;
 
@@ -29,9 +29,9 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping("/dashboard/stats")
-    public ResponseEntity<DashboardStatsResponse> getDashboardStats() {
+    public ResponseEntity<AdminDashboardStatsResponse> getDashboardStats() {
         try {
-            DashboardStatsResponse stats = adminService.getDashboardStats();
+            AdminDashboardStatsResponse stats = adminService.getDashboardStats();
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

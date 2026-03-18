@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import com.agende_backend.dto.DashboardStatsResponse;
+import com.agende_backend.dto.AdminDashboardStatsResponse;
 import com.agende_backend.dto.ProfissionalResponse;
 import com.agende_backend.entity.Notificacao;
 import com.agende_backend.entity.Profissional;
@@ -41,8 +41,8 @@ public class AdminService {
     @Autowired
     private NotificacaoRepository notificacaoRepository;
 
-    public DashboardStatsResponse getDashboardStats() {
-        DashboardStatsResponse stats = new DashboardStatsResponse();
+    public AdminDashboardStatsResponse getDashboardStats() {
+        AdminDashboardStatsResponse stats = new AdminDashboardStatsResponse();
 
         stats.setTotalUsuarios(usuarioRepository.count());
         stats.setTotalPacientes(pacienteRepository.count());
