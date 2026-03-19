@@ -50,10 +50,11 @@ public class PacienteController {
     @GetMapping
     public ResponseEntity<List<PacienteResponse>> listarTodos() {
     try {
-        List<PacienteResponse> pacientes = pacienteService.listarTodos();
-        return ResponseEntity.ok(pacientes);
+        List<PacienteResponse> dtos = pacienteService.listarTodos();
+        return ResponseEntity.ok(dtos);
     } catch (Exception e) {
-        return ResponseEntity.status(500).body(null);
+      e.printStackTrace();
+        return ResponseEntity.status(500).build();
     }
   }
 }

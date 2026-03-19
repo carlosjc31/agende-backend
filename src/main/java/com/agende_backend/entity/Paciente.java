@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.Convert;
 import com.agende_backend.security.AesEncryptor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "pacientes")
@@ -32,6 +33,7 @@ public class Paciente {
 
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true, nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 
     @Column(name = "nome_completo", nullable = false)

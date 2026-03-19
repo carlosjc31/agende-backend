@@ -63,8 +63,11 @@ public class PacienteService {
     }
 
     public List<PacienteResponse> listarTodos() {
-    return pacienteRepository.findAll().stream()
-        .map(this::convertToResponse)
+      List<Paciente> listaDoBanco = pacienteRepository.findAll();
+    System.out.println("Pacientes encontrados no banco: " + listaDoBanco.size()); // Log de debug
+
+    return listaDoBanco.stream()
+        .map(this::convertToResponse) // Use o conversor que já testamos
         .collect(Collectors.toList());
     }
 
