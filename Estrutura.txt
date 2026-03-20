@@ -232,3 +232,6 @@ CREATE TRIGGER trigger_atualizar_avaliacao
 AFTER INSERT ON avaliacoes
 FOR EACH ROW
 EXECUTE FUNCTION atualizar_avaliacao_profissional();
+
+# Criptografia da senha do ADMINISTRADOR
+$2a$10$SvzXd8/fLUdpYUaJeVL95.mE6jOt7Q9xK9FXRLv/DvNjTipGT.hcW

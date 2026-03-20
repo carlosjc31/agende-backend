@@ -2,7 +2,9 @@ package com.agende_backend.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -227,4 +229,16 @@ public class ConsultaService {
             .map(this::convertToResponse) // Usa o seu conversor que já extrai nomes de médico e paciente
             .collect(Collectors.toList());
 }
+
+  public Map<String, Long> getAdminStats(){
+    Map<String, Long> stats = new HashMap<>();
+    stats.put("consultasHoje", consultaRepository.countByDataConsulta(LocalDate.now()));
+    stats.put("pendentes", profissionalRepository.countByValidado(false));
+    stats.put("totalPacientes", pacienteRepository.count());
+    stats.put("totalProfissionais", profissionalRepository.countByValidado(true));
+
+    return stats;
+
+  }
+
 }
