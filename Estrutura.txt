@@ -235,3 +235,210 @@ EXECUTE FUNCTION atualizar_avaliacao_profissional();
 
 # Criptografia da senha do ADMINISTRADOR
 $2a$10$SvzXd8/fLUdpYUaJeVL95.mE6jOt7Q9xK9FXRLv/DvNjTipGT.hcW
+
+
+
+
+-- ============================================
+-- DADOS DA TABELA: USUARIOS
+-- ============================================
+
+INSERT INTO usuarios (id, email, senha, perfil, ativo, data_criacao, ultima_atualizacao)
+VALUES
+('672f4e90-03c2-4aac-9801-ac5ee622bdcf', 'pedro123@gmail.com',
+ '$2a$10$SvzXd8/fLUdpYUaJeVL95.mE6jOt7Q9xK9FXRLv/DvNjTipGT.hcW',
+ 'PACIENTE', TRUE, '2026-03-14 15:39:51.372402', '2026-03-14 15:39:51.372402'),
+
+('01294430-7c5d-45ef-b2db-d1fa61ab393e', 'batista@gmail.com',
+ '$2a$10$zdNKl.HdeXd.fBVRGWpkp.fOUqMyTID2lPGXq0I7UV1fygMEUbyL2',
+ 'PACIENTE', TRUE, '2026-03-14 16:02:54.034709', '2026-03-14 16:02:54.034709'),
+
+('550e8400-e29b-41d4-a716-446655440001', 'admin@agende.com',
+ '$2a$10$SvzXd8/fLUdpYUaJeVL95.mE6jOt7Q9xK9FXRLv/DvNjTipGT.hcW',
+ 'ADMINISTRADOR', TRUE, NULL, '2026-03-14 19:40:11.053312'),
+
+('550e8400-e29b-41d4-a716-446655440003', 'medico@email.com',
+ '$2a$10$SvzXd8/fLUdpYUaJeVL95.mE6jOt7Q9xK9FXRLv/DvNjTipGT.hcW',
+ 'PROFISSIONAL', TRUE, NULL, '2026-03-14 19:40:11.053312'),
+
+('bfc6d3bb-c111-4b36-8a71-df4c16213b6b', 'cardoso@gmail.com',
+ '$2a$10$oVmBQd1/IvMobld3sWGiJeMccm2SNz7XSXTV1zgdQjqhhOH/JtgC6',
+ 'PROFISSIONAL', TRUE, '2026-03-17 07:39:42.053833', '2026-03-17 07:39:42.053833');
+
+
+
+-- ============================================
+-- DADOS DA TABELA: PACIENTES
+-- ============================================
+
+INSERT INTO pacientes (
+    id, usuario_id, nome_completo, cpf, data_nascimento,
+    telefone, cns, endereco, cidade, estado, cep, foto_url
+)
+VALUES
+('9c3006e2-ffca-45aa-878e-34f32e12993f',
+ '01294430-7c5d-45ef-b2db-d1fa61ab393e',
+ 'João Batista',
+ 'YdcktiRIzpA+XVql3AYYaQ==',
+ '2003-02-12',
+ '(11) 99625-8741',
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ NULL),
+
+('87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '672f4e90-03c2-4aac-9801-ac5ee622bdcf',
+ 'Pedro Paulo',
+ 'pK3oGxQjuOCF0k3gevC2vA==',
+ '2008-05-12',
+ '(12) 9985-2147',
+ '14bEvA7CeyIoopYkYqtNWw==',
+ 'Rua Sorocaba',
+ 'Sorocaba',
+ NULL,
+ NULL,
+ NULL);
+
+
+
+-- ============================================
+-- DADOS DA TABELA: PROFISSIONAIS
+-- ============================================
+
+INSERT INTO profissionais (
+    id, usuario_id, nome_completo, crm, especialidade,
+    telefone, bio, anos_experiencia, valor_consulta,
+    foto_url, hospital_clinica, endereco, cidade, estado,
+    cep, validado, avaliacao_media, total_avaliacoes, total_pacientes
+)
+VALUES
+('550e8400-e29b-41d4-a716-446655440020',
+ '550e8400-e29b-41d4-a716-446655440003',
+ 'Dra. Maria Santos',
+ 'CRM/SP 123456',
+ 'Cardiologia',
+ '(11) 98765-1234',
+ 'Médica cardiologista com mais de 15 anos de experiência',
+ 15,
+ 250.00,
+ NULL,
+ 'Hospital São Lucas',
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ TRUE,
+ NULL,
+ NULL,
+ NULL),
+
+('c666b7d8-09e8-44bb-8701-c9fea4076c5f',
+ 'bfc6d3bb-c111-4b36-8a71-df4c16213b6b',
+ 'Paulo Henrique Cardoso',
+ 'PR-123456',
+ 'Pediatra',
+ '(43) 98521-4736',
+ 'Especialistas em pediatria.',
+ NULL,
+ 200.00,
+ NULL,
+ 'Clínica saudável',
+ 'Rua das clínicas',
+ NULL,
+ NULL,
+ NULL,
+ TRUE,
+ 0.00,
+ 0,
+ 0);
+
+
+-- ============================================
+-- DADOS DA TABELA: CONSULTAS
+-- ============================================
+
+INSERT INTO consultas (
+    id, paciente_id, profissional_id, data_consulta, hora_consulta,
+    status, motivo_consulta, observacoes, valor,
+    lembrete_enviado, data_criacao, data_cancelamento, motivo_cancelamento
+)
+VALUES
+('e7437535-bd97-40fb-a3c9-0e539fe00440',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-20', '08:00:00',
+ 'REALIZADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-16 09:16:55.719707', NULL, NULL),
+
+('a373e900-4e97-4647-9469-6e4d7533a040',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-17', '08:30:00',
+ 'REALIZADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-15 14:35:19.948766', NULL, NULL),
+
+('c2808d8f-5bad-4c21-bbed-80b15248fd3f',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-18', '08:30:00',
+ 'CANCELADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-16 08:43:56.958193', '2026-03-16 13:08:09.627734', 'Cancelado pelo profissional'),
+
+('70f9b3f2-7130-4eda-81fe-7a9d7d9a1114',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-18', '11:00:00',
+ 'REALIZADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-15 14:38:00.512008', NULL, NULL),
+
+('a301310c-b8a3-4163-bae9-556189c6c660',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-17', '09:00:00',
+ 'AGENDADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-16 13:21:46.150448', NULL, NULL),
+
+('2a2d7e98-9a0b-41bb-b028-082671ebf670',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-18', '10:00:00',
+ 'AGENDADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-16 13:56:27.837929', NULL, NULL),
+
+('cfcc4dbd-ab87-4981-90cc-da23869819df',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-20', '16:30:00',
+ 'AGENDADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-16 13:57:20.012494', NULL, NULL),
+
+('6c18c894-14aa-49be-883f-a90dab201d34',
+ '9c3006e2-ffca-45aa-878e-34f32e12993f',
+ 'c666b7d8-09e8-44bb-8701-c9fea4076c5f',
+ '2026-03-19', '09:30:00',
+ 'REALIZADA', 'Consulta presencial', 'Recetado paracetamol.', NULL,
+ FALSE, '2026-03-17 08:19:40.063564', NULL, NULL),
+
+('a052cc5d-a401-457e-9d45-d7f9f3f69e4d',
+ '87252005-130e-4a2f-bf62-a78a5af65fc1',
+ 'c666b7d8-09e8-44bb-8701-c9fea4076c5f',
+ '2026-03-20', '09:00:00',
+ 'REALIZADA', 'Consulta presencial', 'Paciente com leve dor de cabeça', 200.00,
+ FALSE, '2026-03-17 10:06:52.968857', NULL, NULL),
+
+('a074ddc7-3863-44cd-aae8-1af96f56f9c3',
+ '9c3006e2-ffca-45aa-878e-34f32e12993f',
+ '550e8400-e29b-41d4-a716-446655440020',
+ '2026-03-23', '16:30:00',
+ 'AGENDADA', 'Consulta presencial', NULL, 250.00,
+ FALSE, '2026-03-19 10:41:59.051466', NULL, NULL),
+
+('f0173adf-be8c-4974-9e33-fafab0ca2ec5',
+ '9c3006e2-ffca-45aa-878e-34f32e12993f',
+ 'c666b7d8-09e8-44bb-8701-c9fea4076c5f',
+ '2026-03-25', '09:00:00',
+ 'AGENDADA', 'Consulta presencial', NULL, 200.00,
+ FALSE, '2026-03-19 10:42:31.661568', NULL, NULL);
