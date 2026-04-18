@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   db:
@@ -13,6 +12,19 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: agende_backend
+    restart: always
+    ports:
+      - "8080:8088"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agende_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
 
 volumes:
   postgres_data:

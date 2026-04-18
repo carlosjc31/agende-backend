@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.agende_backend.dto.AuthResponse;
+import com.agende_backend.dto.ForgotPasswordRequestDTO;
 import com.agende_backend.dto.LoginRequest;
 import com.agende_backend.dto.RegisterPacienteRequest;
 import com.agende_backend.dto.RegisterProfissionalRequest;
+import com.agende_backend.dto.AuthResponse.ResetPasswordRequestDTO;
 import com.agende_backend.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -55,6 +57,25 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace(); // Isto vai imprimir o erro gigante no terminal do Java
             return ResponseEntity.internalServerError().body("Erro no servidor: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO request) {
+      authService.processForgotPassword(request.getEmail());
+
+      return ResponseEntity.ok("Se o e-mail estiver cadastrado, as instruções foram enviadas.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        boolean sucesso = authService.resetPassword(request.email(), request.codigo(), request.novaSenha(), authService.passwordEncoder);
+
+        if (sucesso) {
+            return ResponseEntity.ok("Senha alterada com sucesso.");
+        }
+        else{
+          return ResponseEntity.badRequest().body("Código inválido ou expirado.");
         }
     }
 }

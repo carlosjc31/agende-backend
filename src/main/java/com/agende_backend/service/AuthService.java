@@ -1,5 +1,9 @@
 package com.agende_backend.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
+
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +23,7 @@ import com.agende_backend.repository.UsuarioRepository;
 import com.agende_backend.security.JwtUtil;
 
 import jakarta.transaction.Transactional;
-//import jakarta.validation.Valid;
+
 
 @Service
 public class AuthService {
@@ -34,7 +38,7 @@ public class AuthService {
     private com.agende_backend.repository.ProfissionalRepository profissionalRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -166,6 +170,43 @@ public class AuthService {
             profissional.getNomeCompleto(),
             profissional.getTelefone()
         );
+    }
+
+    public void processForgotPassword(String email){
+      Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim().toLowerCase());
+
+      if(usuarioOpt.isPresent()){
+        Usuario usuario = usuarioOpt.get();
+
+        String codigo = String.format("%06d", new Random().nextInt(999999));
+
+        System.out.println("🔒 RECUPERAÇÃO DE SENHA SOLICITADA");
+        System.out.println("E-mail encontrado: " + usuario.getEmail());
+        System.out.println("Token gerado: " + codigo);
+        System.out.println("Link simulado: http://192.168.0.11:8081/reset-password?token=" + codigo);
+
+      }
+    }
+
+    public boolean resetPassword(String email, String codigo, String novaSenha, PasswordEncoder passwordEncoder){
+      Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim().toLowerCase());
+
+      if(usuarioOpt.isPresent()){
+        Usuario usuario = usuarioOpt.get();
+
+        if(codigo.equals(usuario.getCodigoRecuperacao()) &&
+            usuario.getValidadeCodigo() != null &&
+            usuario.getValidadeCodigo().isAfter(LocalDateTime.now())){
+              usuario.setSenha(passwordEncoder.encode(novaSenha));
+
+              usuario.setCodigoRecuperacao(null);
+              usuario.setValidadeCodigo(null);
+
+              usuarioRepository.save(usuario);
+              return true;
+            }
+      }
+      return false;
     }
 
 }

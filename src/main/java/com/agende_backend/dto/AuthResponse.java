@@ -28,4 +28,10 @@ public class AuthResponse {
         this.nome = nome;
         this.telefone = telefone;
     }
+
+    public record ResetPasswordRequestDTO(
+        String email,
+        String codigo,
+        String novaSenha
+    ) {}
 }

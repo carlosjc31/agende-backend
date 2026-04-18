@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Usuario {
-   
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -50,6 +50,20 @@ public class Usuario {
     @UpdateTimestamp
     @Column(name = "ultima_atualizacao")
     private LocalDateTime ultimaAtualizacao;
+
+    @Column(name = "codigo_recuperacao", length = 6)
+    private String codigoRecuperacao;
+
+    @Column(name = "validade_codigo")
+    private LocalDateTime validadeCodigo;
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
     public enum PerfilUsuario {
         PACIENTE, PROFISSIONAL, ADMINISTRADOR
