@@ -10,7 +10,7 @@ import com.agende_backend.entity.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
-
+    // busca o usuário pelo email
     Optional<Usuario> findByEmail(String email);
 
     Boolean existsByEmail(String email);

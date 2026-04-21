@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AdminDashboardStatsResponse {
-
+    // Estatísticas gerais
     private Long totalUsuarios;
     private Long totalPacientes;
     private Long totalProfissionais;

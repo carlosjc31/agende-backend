@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfissionalResponse {
-
-
+    // dados do profissional
     private UUID id;
     private String nomeCompleto;
     // Usado no ProfissionalService

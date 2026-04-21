@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class RegisterProfissionalRequest {
-
+    // Registrar do profissional
     @NotBlank(message = "Nome é obrigatório")
     private String nomeCompleto;
 

@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Usuario {
-
+    // atributos do usuário
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

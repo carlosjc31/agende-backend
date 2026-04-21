@@ -6,9 +6,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ProfissionalDashboardResponse {
-    private long consultasHoje;
-    private long pendentes;
-    private long confirmadas;
-    private long realizadas;
-    private long canceladas;
+  // dashboard de um profissional
+  private long consultasHoje;
+  private long pendentes;
+  private long confirmadas;
+  private long realizadas;
+  private long canceladas;
 }

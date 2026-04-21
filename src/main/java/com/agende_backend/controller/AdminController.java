@@ -27,7 +27,7 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
-
+    // Dashboard stats
     @GetMapping("/dashboard/stats")
     public ResponseEntity<AdminDashboardStatsResponse> getDashboardStats() {
         try {
@@ -37,13 +37,13 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Profissionais pendentes
     @GetMapping("/profissionais/pendentes")
     public ResponseEntity<List<ProfissionalResponse>> listarProfissionaisPendentes() {
         List<ProfissionalResponse> profissionais = adminService.listarProfissionaisPendentes();
         return ResponseEntity.ok(profissionais);
     }
-
+    // Aprovar profissional
     @PatchMapping("/profissionais/{id}/aprovar")
     public ResponseEntity<Void> aprovarProfissional(@PathVariable UUID id) {
         try {
@@ -53,7 +53,7 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Rejeitar profissional
     @PatchMapping("/profissionais/{id}/rejeitar")
     public ResponseEntity<Void> rejeitarProfissional(
             @PathVariable UUID id,
@@ -65,7 +65,7 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Listar todos os usuarios
     @GetMapping("/usuarios")
     public ResponseEntity<List<?>> listarTodosUsuarios() {
         try {
@@ -75,7 +75,7 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Deletar um usuario
     @DeleteMapping("/usuarios/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable UUID id) {
         try {

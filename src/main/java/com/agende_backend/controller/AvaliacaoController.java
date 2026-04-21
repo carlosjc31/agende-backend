@@ -26,7 +26,7 @@ public class AvaliacaoController {
 
      @Autowired
     private AvaliacaoService avaliacaoService;
-
+    // Endpoint para avaliar uma consulta
     @PostMapping("/paciente/{pacienteId}")
     public ResponseEntity<Avaliacao> avaliarConsulta(
             @PathVariable UUID pacienteId,
@@ -38,7 +38,7 @@ public class AvaliacaoController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Endpoint para listar as avaliações de um profissional
     @GetMapping("/profissional/{profissionalId}")
     public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@PathVariable UUID profissionalId) {
         List<Avaliacao> avaliacoes = avaliacaoService.listarAvaliacoesProfissional(profissionalId);

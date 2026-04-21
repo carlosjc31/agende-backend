@@ -13,7 +13,7 @@ import com.agende_backend.entity.Consulta;
 import com.agende_backend.entity.Profissional;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, UUID> {
-
+    // busca todas as consultas de um paciente
     List<Consulta> findByPacienteIdOrderByDataConsultaDescHoraConsultaDesc(UUID pacienteId);
 
     List<Consulta> findByProfissionalIdOrderByDataConsultaDescHoraConsultaDesc(UUID profissionalId);

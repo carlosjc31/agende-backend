@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificacaoResponse {
-
+    // notificacao da entidade Notificacao
     private UUID id;
     private String tipo;
     private String titulo;

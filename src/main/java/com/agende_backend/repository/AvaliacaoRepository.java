@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.agende_backend.entity.Avaliacao;
 
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, UUID> {
-
+    // buscar avaliações de um profissional por ordem de data
     List<Avaliacao> findByProfissionalIdOrderByDataAvaliacaoDesc(UUID profissionalId);
 
     Optional<Avaliacao> findByConsultaId(UUID consultaId);
 
     Boolean existsByConsultaId(UUID consultaId);
-} 
+}

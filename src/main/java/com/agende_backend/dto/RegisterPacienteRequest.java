@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.*;
 
 public class RegisterPacienteRequest {
-
+    // registro de paciente
     @NotBlank(message = "Nome completo é obrigatório")
     private String nomeCompleto;
 

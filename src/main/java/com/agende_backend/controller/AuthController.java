@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import com.agende_backend.dto.AuthResponse;
 import com.agende_backend.dto.ForgotPasswordRequestDTO;
 import com.agende_backend.dto.LoginRequest;
-import com.agende_backend.dto.RegisterPacienteRequest;
 import com.agende_backend.dto.RegisterProfissionalRequest;
+import com.agende_backend.dto.RegistroInicialDTO;
 import com.agende_backend.dto.AuthResponse.ResetPasswordRequestDTO;
+import com.agende_backend.dto.CompletarPerfilPacienteDTO;
 import com.agende_backend.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-
+    // NOVO Endpoint de login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
@@ -34,9 +35,10 @@ public class AuthController {
 
     // O endpoint que faltava para a app conseguir criar a conta!
     @PostMapping("/register/paciente")
-    public ResponseEntity<?> registerPaciente(@Valid @RequestBody RegisterPacienteRequest request) {
+    public ResponseEntity<?> registerPaciente(@Valid @RequestBody RegistroInicialDTO request) {
         try {
-            AuthResponse response = authService.registerPaciente(request);
+          // verifica se o email ja existe na base de usuarios
+            AuthResponse response = authService.registrarUsuarioInicial(request);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             // Retorna o erro específico (ex: "Email já registado") para a app mostrar ao utilizador
@@ -59,14 +61,14 @@ public class AuthController {
             return ResponseEntity.internalServerError().body("Erro no servidor: " + e.getMessage());
         }
     }
-
+    // NOVO Endpoint quando o usuario esquecer a senha
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO request) {
       authService.processForgotPassword(request.getEmail());
 
       return ResponseEntity.ok("Se o e-mail estiver cadastrado, as instruções foram enviadas.");
     }
-
+    // NOVO Endpoint para resetar a senha
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         boolean sucesso = authService.resetPassword(request.email(), request.codigo(), request.novaSenha(), authService.passwordEncoder);
@@ -77,5 +79,16 @@ public class AuthController {
         else{
           return ResponseEntity.badRequest().body("Código inválido ou expirado.");
         }
+    }
+    // NOVO Endpoint para completar o perfil
+    @PutMapping("/completar-perfil/paciente")
+    public ResponseEntity<String> completarPerfil(@Valid @RequestBody CompletarPerfilPacienteDTO request){
+      try{
+          authService.completarPerfilPaciente(request);
+          return ResponseEntity.ok("Perfil completado com sucesso!");
+      } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body("Erro ao completar o perfil: " + e.getMessage());
+      }
+
     }
 }

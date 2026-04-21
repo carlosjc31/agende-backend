@@ -13,7 +13,7 @@ import com.agende_backend.entity.Profissional;
 
 @Repository
 public interface ProfissionalRepository extends JpaRepository<Profissional, UUID> {
-
+    // busca um profissional pelo id do usuário
     Optional<Profissional> findByUsuarioId(UUID usuarioId);
 
     Optional<Profissional> findByCrm(String crm);

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.agende_backend.entity.Notificacao;
 
 public interface NotificacaoRepository extends JpaRepository<Notificacao, UUID> {
-    
+    // nitificacoes do usuario
     List<Notificacao> findByUsuarioIdOrderByDataEnvioDesc(UUID usuarioId);
 
     List<Notificacao> findByUsuarioIdAndLidaFalseOrderByDataEnvioDesc(UUID usuarioId);

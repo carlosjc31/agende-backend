@@ -19,16 +19,16 @@ public class AesEncryptor implements AttributeConverter<String, String> {
     @Value("${aes.secret.key}")
     private String secretKey;
 
+    // Converte o dado para o banco
     @Override
     public String convertToDatabaseColumn(String attribute) {
         if (attribute == null) return null;
         try {
-            // Truque de Mestre: O Hibernate às vezes tenta usar essa classe antes do Spring acordar.
             // Se a chave vier vazia, injetamos manualmente para garantir que nunca falha!
             if (secretKey == null) {
                 secretKey = "12345678901234567890123456789012";
             }
-
+            // Criamos a chave de assinatura para encriptar
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
@@ -37,7 +37,7 @@ public class AesEncryptor implements AttributeConverter<String, String> {
             throw new RuntimeException("Erro ao encriptar o dado", e);
         }
     }
-
+    // Converte o dado do banco
     @Override
     public String convertToEntityAttribute(String dbData) {
         if (dbData == null) return null;
@@ -45,7 +45,7 @@ public class AesEncryptor implements AttributeConverter<String, String> {
             if (secretKey == null) {
                 secretKey = "12345678901234567890123456789012";
             }
-
+            // Criamos a chave de assinatura para desencriptar
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, keySpec);

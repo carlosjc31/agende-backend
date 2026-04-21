@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Avaliacao {
 
-
+    // Avaliacao da consulta
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

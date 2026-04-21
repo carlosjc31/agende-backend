@@ -22,19 +22,19 @@ public class NotificacaoController {
 
     @Autowired
     private NotificacaoService notificacaoService;
-
+    // notificacoes do usuário
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<NotificacaoResponse>> listarNotificacoes(@PathVariable UUID usuarioId) {
         List<NotificacaoResponse> notificacoes = notificacaoService.listarNotificacoes(usuarioId);
         return ResponseEntity.ok(notificacoes);
     }
-
+    // notificacoes nao lidas
     @GetMapping("/usuario/{usuarioId}/nao-lidas")
     public ResponseEntity<List<NotificacaoResponse>> listarNaoLidas(@PathVariable UUID usuarioId) {
         List<NotificacaoResponse> notificacoes = notificacaoService.listarNotificacoesNaoLidas(usuarioId);
         return ResponseEntity.ok(notificacoes);
     }
-
+    // marcar como lida
     @PatchMapping("/{notificacaoId}/marcar-lida")
     public ResponseEntity<Void> marcarComoLida(@PathVariable UUID notificacaoId) {
         try {

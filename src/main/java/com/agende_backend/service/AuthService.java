@@ -6,6 +6,7 @@ import java.util.Random;
 
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 //import com.agende_backend.controller.RegisterPacienteRequest;
 import com.agende_backend.dto.AuthResponse;
+import com.agende_backend.dto.CompletarPerfilPacienteDTO;
 import com.agende_backend.dto.LoginRequest;
 import com.agende_backend.dto.RegisterProfissionalRequest;
+import com.agende_backend.dto.RegistroInicialDTO;
 import com.agende_backend.entity.Paciente;
 import com.agende_backend.entity.Profissional;
 import com.agende_backend.entity.Usuario;
@@ -46,17 +49,17 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
+        // Verifica se a senha esta correta usando o passwordEncoder
         if (!passwordEncoder.matches(request.getSenha(), usuario.getSenha())) {
             throw new RuntimeException("Senha inválida");
         }
-
+        // Gera o token a partir do email e do perfil
         String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().name());
-
+        // Retorna a resposta
         java.util.UUID perfilId = null;
         String nome = null;
         String telefone = null;
-
+        // Pega o ID do paciente ou do profissional dependendo do perfil
         if (usuario.getPerfil() == Usuario.PerfilUsuario.PACIENTE) {
           var paciente = pacienteRepository.findByUsuarioId(usuario.getId());
           if (paciente.isPresent()) {
@@ -66,7 +69,7 @@ public class AuthService {
               telefone = paxiente.getTelefone();
           }
         }
-
+        // Pega o ID do paciente ou do profissional dependendo do perfil
         else if (usuario.getPerfil() == Usuario.PerfilUsuario.PROFISSIONAL) {
           var profissional = profissionalRepository.findByUsuarioId(usuario.getId());
           if (profissional.isPresent()) {
@@ -76,7 +79,7 @@ public class AuthService {
               telefone = prof.getTelefone();
           }
         }
-
+        // Retorna a resposta com o token gerado
         return new AuthResponse(
             token,
             usuario.getId(),
@@ -88,7 +91,7 @@ public class AuthService {
         );
     }
 
-
+    // registrar paciente no sistema
     @Transactional
     public AuthResponse registerPaciente(com.agende_backend.dto.RegisterPacienteRequest request) {
         // Validações
@@ -171,15 +174,15 @@ public class AuthService {
             profissional.getTelefone()
         );
     }
-
+    // Método para processar a solicitação de recuperação de senha
     public void processForgotPassword(String email){
       Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim().toLowerCase());
-
+      // verifica se o usuário foi encontrado
       if(usuarioOpt.isPresent()){
         Usuario usuario = usuarioOpt.get();
-
+        // gera um token de 6 dígitos aleatórios
         String codigo = String.format("%06d", new Random().nextInt(999999));
-
+        // salva o token na base de dados
         System.out.println("🔒 RECUPERAÇÃO DE SENHA SOLICITADA");
         System.out.println("E-mail encontrado: " + usuario.getEmail());
         System.out.println("Token gerado: " + codigo);
@@ -187,13 +190,13 @@ public class AuthService {
 
       }
     }
-
+    // Método para resetar a senha
     public boolean resetPassword(String email, String codigo, String novaSenha, PasswordEncoder passwordEncoder){
       Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim().toLowerCase());
-
+      // verifica se o usuário foi encontrado
       if(usuarioOpt.isPresent()){
         Usuario usuario = usuarioOpt.get();
-
+        // verifica se o token é valido
         if(codigo.equals(usuario.getCodigoRecuperacao()) &&
             usuario.getValidadeCodigo() != null &&
             usuario.getValidadeCodigo().isAfter(LocalDateTime.now())){
@@ -209,4 +212,48 @@ public class AuthService {
       return false;
     }
 
+    public void completarPerfilPaciente(CompletarPerfilPacienteDTO dto){
+        String emailUsuarioLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuarioLogado)
+                .orElseThrow(() -> new RuntimeException("Usuário nao encontrado"));
+
+        Paciente paciente = pacienteRepository.findByUsuarioId(usuario.getId())
+                .orElse(new Paciente());
+
+        paciente.setUsuario(usuario);
+        paciente.setNomeCompleto(dto.nomeCompleto());
+        paciente.setCpf(dto.cpf());
+        paciente.setCns(dto.cns());
+        paciente.setTelefone(dto.telefone());
+        paciente.setDataNascimento(dto.dataNascimento());
+
+        usuarioRepository.save(usuario);
+        pacienteRepository.save(paciente);
+    }
+    // Registro inicial de Usuários
+    @Transactional
+    public AuthResponse registrarUsuarioInicial(RegistroInicialDTO request){
+        // 1. Verifica se o email já existe na base de Usuários
+        if (usuarioRepository.existsByEmail(request.email())) {
+            throw new RuntimeException("Este email já está cadastrado");
+        }
+        // 2. Cria a conta de Login (Usuário)
+        Usuario usuario = new Usuario();
+        usuario.setEmail(request.email());
+        usuario.setSenha(passwordEncoder.encode(request.senha()));
+        // define o perfil do usuário de acordo com o request recebido no DTO
+        try {
+          usuario.setPerfil(Usuario.PerfilUsuario.valueOf(request.perfil().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+          throw new RuntimeException("Perfil inválido, Use PACIENTE ou PROFISSIONAL");
+        }
+        usuario.setAtivo(true);
+        usuario = usuarioRepository.save(usuario);
+        // gera o token a partir do email e do perfil
+        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().name());
+        // Retorna a resposta
+        return new AuthResponse(
+          token, usuario.getId(), usuario.getEmail(), usuario.getPerfil().name(), null, null, null);
+    }
 }

@@ -23,8 +23,7 @@ public class NotificacaoService {
 
     @Autowired
     private NotificacaoRepository notificacaoRepository;
-
-
+    // enviar notificação de consulta agendada
     @Transactional
     public void enviarNotificacaoConsultaAgendada(Consulta consulta) {
         // Notificação para o paciente
@@ -49,7 +48,7 @@ public class NotificacaoService {
             consulta.getHoraConsulta()));
         notificacaoRepository.save(notifProf);
     }
-
+    // enviar notificação de consulta cancelada
     @Transactional
     public void enviarNotificacaoCancelamento(Consulta consulta) {
         // Notificação para o paciente
@@ -70,7 +69,7 @@ public class NotificacaoService {
             consulta.getPaciente().getNomeCompleto()));
         notificacaoRepository.save(notifProf);
     }
-
+    // enviar notificação de consulta confirmada
     @Transactional
     public void enviarNotificacaoConfirmacao(Consulta consulta) {
         Notificacao notifPaciente = new Notificacao();
@@ -84,19 +83,19 @@ public class NotificacaoService {
         notificacaoRepository.save(notifPaciente);
     }
 
-
+    // listar notificação do usuario
     public List<NotificacaoResponse> listarNotificacoes(UUID usuarioId) {
         return notificacaoRepository.findByUsuarioIdOrderByDataEnvioDesc(usuarioId).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // listar notificação nao lidas do usuario
     public List<NotificacaoResponse> listarNotificacoesNaoLidas(UUID usuarioId) {
         return notificacaoRepository.findByUsuarioIdAndLidaFalseOrderByDataEnvioDesc(usuarioId).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // marcar notificação como lida (visualizada)
     @Transactional
     public void marcarComoLida(UUID notificacaoId) {
         Notificacao notificacao = notificacaoRepository.findById(notificacaoId)
@@ -104,7 +103,7 @@ public class NotificacaoService {
         notificacao.setLida(true);
         notificacaoRepository.save(notificacao);
     }
-
+    // converter notificação
     private NotificacaoResponse convertToResponse(Notificacao notificacao) {
         return new NotificacaoResponse(
             notificacao.getId(),

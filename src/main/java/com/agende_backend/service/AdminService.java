@@ -40,7 +40,7 @@ public class AdminService {
 
     @Autowired
     private NotificacaoRepository notificacaoRepository;
-
+    // Dashboard stats
     public AdminDashboardStatsResponse getDashboardStats() {
         AdminDashboardStatsResponse stats = new AdminDashboardStatsResponse();
 
@@ -55,7 +55,7 @@ public class AdminService {
 
         return stats;
     }
-
+    // Profissionais pendentes
     public List<ProfissionalResponse> listarProfissionaisPendentes() {
         List<Profissional> profissionais = profissionalRepository.findByValidado(false);
 
@@ -64,7 +64,7 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-
+    // Aprovar profissional e enviar notificação para o profissional
     @Transactional
     public void aprovarProfissional(UUID profissionalId) {
 
@@ -85,7 +85,7 @@ public class AdminService {
         notificacao.setDataEnvio(LocalDateTime.now());
         notificacaoRepository.save(notificacao);
     }
-
+    // Rejeitar profissional e enviar notificação para o profissional
     @Transactional
     public void rejeitarProfissional(UUID profissionalId, String motivo) {
 
@@ -106,12 +106,12 @@ public class AdminService {
         // Opcional: desativar ou deletar o profissional
         profissionalRepository.delete(profissional);
     }
-
+    // Listar todos os usuarios (Admin)
     public List<?> listarTodosUsuarios() {
         return usuarioRepository.findAll();
     }
 
-
+    // Deletar um usuario (Admin)
     @Transactional
     public void deletarUsuario(UUID usuarioId) {
 
@@ -120,7 +120,7 @@ public class AdminService {
 
         usuarioRepository.delete(usuario);
     }
-
+    // Conversão de Profissional para ProfissionalResponse (Admin)
     private ProfissionalResponse convertToResponse(Profissional profissional) {
         ProfissionalResponse response = new ProfissionalResponse();
         response.setId(profissional.getId());

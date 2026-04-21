@@ -16,13 +16,13 @@ import com.agende_backend.repository.PacienteRepository;
 public class PacienteService {
     @Autowired
     private PacienteRepository pacienteRepository;
-
+    // buscar paciente pelo id do usuário
     public PacienteResponse buscarPorId(UUID id) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
         return convertToResponse(paciente);
     }
-
+    // atualizar paciente pelo id
     public PacienteResponse atualizarPaciente(UUID id, AtualizarPacienteRequest request) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
@@ -39,7 +39,7 @@ public class PacienteService {
         return convertToResponse(paciente);
     }
 
-    // O nosso conversor automático (Igual fizemos no Profissional)
+    // dados do paciente para o aplicativo
     private PacienteResponse convertToResponse(Paciente paciente) {
         PacienteResponse response = new PacienteResponse();
         response.setId(paciente.getId());
@@ -61,7 +61,7 @@ public class PacienteService {
 
         return response;
     }
-
+    // listar todos os pacientes
     public List<PacienteResponse> listarTodos() {
       List<Paciente> listaDoBanco = pacienteRepository.findAll();
     System.out.println("Pacientes encontrados no banco: " + listaDoBanco.size()); // Log de debug

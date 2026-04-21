@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Profissional {
-    
+    // Atributos do Profissional
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -79,5 +79,5 @@ public class Profissional {
     @Column(name = "total_pacientes")
     private Integer totalPacientes = 0;
 
-    
+
 }

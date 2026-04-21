@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConsultaResponse {
-
+    // Dados da Consulta
     private UUID id;
     private LocalDate dataConsulta;
     private LocalTime horaConsulta;

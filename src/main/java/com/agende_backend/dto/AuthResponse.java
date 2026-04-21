@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AuthResponse {
-
+    // Atributos do JWT para autenticação
     private String token;
     private String tipo = "Bearer";
     private UUID usuarioId;
@@ -18,7 +18,7 @@ public class AuthResponse {
 
     private String nome;
     private String telefone;
-
+    // Construtor personalizado para o JWT para autenticação
     public AuthResponse(String token, UUID usuarioId, String email, String perfil, UUID perfilId, String nome, String telefone) {
         this.token = token;
         this.usuarioId = usuarioId;
@@ -28,7 +28,7 @@ public class AuthResponse {
         this.nome = nome;
         this.telefone = telefone;
     }
-
+    // DTO para redefinição de senha
     public record ResetPasswordRequestDTO(
         String email,
         String codigo,

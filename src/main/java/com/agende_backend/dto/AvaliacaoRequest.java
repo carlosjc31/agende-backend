@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 public class AvaliacaoRequest {
-
+    // avaliacao da consulta realizada
     @NotNull(message = "ID da consulta é obrigatório")
     private UUID consultaId;
 

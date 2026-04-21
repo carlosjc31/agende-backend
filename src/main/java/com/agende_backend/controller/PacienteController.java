@@ -24,7 +24,7 @@ import com.agende_backend.service.PacienteService;
 public class PacienteController {
     @Autowired
     private PacienteService pacienteService;
-
+    // Método para buscar um paciente pelo ID
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponse> buscarPorId(@PathVariable UUID id) {
         try {
@@ -34,7 +34,7 @@ public class PacienteController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    // Método para atualizar um paciente
     @PutMapping("/{id}")
     public ResponseEntity<PacienteResponse> atualizarPaciente(
             @PathVariable UUID id,
@@ -46,7 +46,7 @@ public class PacienteController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    // Método para listar todos os pacientes
     @GetMapping
     public ResponseEntity<List<PacienteResponse>> listarTodos() {
     try {

@@ -29,11 +29,11 @@ public class AvaliacaoService {
 
         Consulta consulta = consultaRepository.findById(request.getConsultaId())
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
-
+        // Verificar se consulta pertence ao paciente
         if (!consulta.getPaciente().getId().equals(pacienteId)) {
             throw new RuntimeException("Consulta não pertence ao paciente");
         }
-
+        // Verificar se consulta foi realizada
         if (consulta.getStatus() != Consulta.StatusConsulta.REALIZADA) {
             throw new RuntimeException("Só é possível avaliar consultas realizadas");
         }
@@ -53,7 +53,7 @@ public class AvaliacaoService {
 
         return avaliacaoRepository.save(avaliacao);
     }
-
+    // Listar avaliações de um profissional
     public List<Avaliacao> listarAvaliacoesProfissional(UUID profissionalId) {
         return avaliacaoRepository.findByProfissionalIdOrderByDataAvaliacaoDesc(profissionalId);
     }

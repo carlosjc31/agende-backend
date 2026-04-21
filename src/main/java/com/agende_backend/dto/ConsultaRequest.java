@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 public class ConsultaRequest {
-
+    // consultas de um profissional
     @NotNull(message = "ID do profissional é obrigatório")
     private UUID profissionalId;
 

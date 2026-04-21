@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Consulta {
-
+    // Atributos da consulta
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

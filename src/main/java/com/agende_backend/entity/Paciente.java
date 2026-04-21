@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @AllArgsConstructor
 
 public class Paciente {
-
+    // Atributos do Paciente
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

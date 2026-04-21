@@ -19,39 +19,39 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
-
+    // Listar todos os médicos
     public List<ProfissionalResponse> listarTodosProfissionais() {
         return profissionalRepository.findByValidadoTrue().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Listar todos os médicos por especialidade
     public List<ProfissionalResponse> buscarPorEspecialidade(String especialidade) {
         return profissionalRepository.findByEspecialidadeContainingIgnoreCaseAndValidadoTrue(especialidade).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Listar todos os médicos por busca
     public List<ProfissionalResponse> buscarProfissionais(String busca) {
         return profissionalRepository.searchProfissionais(busca).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Listar os 10 melhores avaliados
     public List<ProfissionalResponse> listarMelhoresAvaliados() {
         return profissionalRepository.findTopRatedProfissionais().stream()
                 .limit(10)
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Listar um médico pelo id do usuário
     public ProfissionalResponse buscarPorId(UUID id) {
         Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
         return convertToResponse(profissional);
     }
 
-    // 1. Lista apenas os médicos que têm validado = false
+    // Lista apenas os médicos que têm validado = false
     public List<ProfissionalResponse> listarPendentes() {
         List<Profissional> pendentes = profissionalRepository.findByValidadoFalse();
         return pendentes.stream()
@@ -59,7 +59,7 @@ public class ProfissionalService {
                 .collect(Collectors.toList());
     }
 
-    // 2. Aprovar (Muda o validado para true)
+    // Aprovar (Muda o validado para true)
     @Transactional
     public void aprovarProfissional(UUID id) {
         Profissional profissional = profissionalRepository.findById(id)
@@ -68,14 +68,14 @@ public class ProfissionalService {
         profissionalRepository.save(profissional);
     }
 
-    // 3. Rejeitar (Exclui o pré-cadastro)
+    // Rejeitar (Exclui o pré-cadastro)
     @Transactional
     public void rejeitarProfissional(UUID id) {
         Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
         profissionalRepository.delete(profissional);
     }
-
+    // dados do profissional para response
     private ProfissionalResponse convertToResponse(Profissional profissional) {
         ProfissionalResponse response = new ProfissionalResponse();
         response.setId(profissional.getId());
@@ -97,7 +97,7 @@ public class ProfissionalService {
         response.setDisponivel(true); // Pode adicionar lógica adicional
         return response;
     }
-
+    // atualizar profissional pelo id
     public ProfissionalResponse atualizarProfissional(UUID id, AtualizarProfissionalRequest request) {
         Profissional profissional = profissionalRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));

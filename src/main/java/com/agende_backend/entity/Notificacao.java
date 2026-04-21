@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Notificacao {
-    
+    // notificacoes do usuário
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PacienteResponse {
-
+  // Atributos do paciente
   private UUID id;
   private String nomeCompleto;
   private String cpf;

@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
-
+    // Verifica se o token é valido e se o usuário está autenticado
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -61,5 +61,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         }
 
         filterChain.doFilter(request, response);
-    }        
+    }
 }
