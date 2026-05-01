@@ -92,7 +92,7 @@ public class AuthController {
       }
     }
 
-    @PatchMapping("/completar-perfil/profissional")
+    @PutMapping("/completar-perfil/profissional")
     public ResponseEntity<String> completarPerfilProfissional(@Valid @RequestBody CompletarPerfilProfissionalDTO request){
       try{
           authService.completarPerfilProfissional(request);

@@ -164,9 +164,12 @@ public class AuthService {
         profissional.setCrm(request.getCrm());
         profissionalRepository.save(profissional);
 
-        // 4. Retorna a resposta (Adapte este retorno ao método que você já usa no Paciente)
+        // 4. Gera o token a partir do email e do perfil
+        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().name());
+
+        // 5. Retorna a resposta (Adapte este retorno ao método que você já usa no Paciente)
         return new AuthResponse(
-            " ", // Certifique-se de que a variável token existe, ou passe "" (vazio) se não fizer login automático
+            token,
             usuario.getId(),
             usuario.getEmail(),
             usuario.getPerfil().name(), // Pega a Role (PROFISSIONAL)
@@ -274,15 +277,12 @@ public class AuthService {
         profissional.setUsuario(usuario);
         profissional.setNomeCompleto(dto.getNomeCompleto());
         profissional.setTelefone(dto.getTelefone());
+        profissional.setCrm(dto.getCrm());
+        profissional.setEspecialidade(dto.getEspecialidade());
+        profissional.setValidado(false); // Mantém como pendente para o Admin aprovar depois!
 
         usuarioRepository.save(usuario);
         profissionalRepository.save(profissional);
 
-        // 5. Salva os dados específicos do médico
-        profissional.setCrm(dto.getCrm());
-        profissional.setEspecialidade(dto.getEspecialidade());
-        // profissional.setValidado(false); // Mantém como pendente para o Admin aprovar depois!
-
-        profissionalRepository.save(profissional);
     }
 }
