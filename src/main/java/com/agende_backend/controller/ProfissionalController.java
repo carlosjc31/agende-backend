@@ -90,5 +90,4 @@ public class ProfissionalController {
         return ResponseEntity.ok().build();
     }
 
-
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 //import com.agende_backend.controller.RegisterPacienteRequest;
 import com.agende_backend.dto.AuthResponse;
 import com.agende_backend.dto.CompletarPerfilPacienteDTO;
+import com.agende_backend.dto.CompletarPerfilProfissionalDTO;
 import com.agende_backend.dto.LoginRequest;
 import com.agende_backend.dto.RegisterProfissionalRequest;
 import com.agende_backend.dto.RegistroInicialDTO;
@@ -255,5 +256,33 @@ public class AuthService {
         // Retorna a resposta
         return new AuthResponse(
           token, usuario.getId(), usuario.getEmail(), usuario.getPerfil().name(), null, null, null);
+    }
+
+    @Transactional
+    public void completarPerfilProfissional(CompletarPerfilProfissionalDTO dto) {
+        // 1. Pega o e-mail do usuário que está logado e fazendo a requisição
+        String emailUsuarioLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 2. Busca o Usuário no banco de dados
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuarioLogado)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        Profissional profissional = profissionalRepository.findByUsuarioId(usuario.getId())
+                .orElse(new Profissional());
+
+        // 3. Atualiza o nome completo na tabela de Usuário (se necessário)
+        profissional.setUsuario(usuario);
+        profissional.setNomeCompleto(dto.getNomeCompleto());
+        profissional.setTelefone(dto.getTelefone());
+
+        usuarioRepository.save(usuario);
+        profissionalRepository.save(profissional);
+
+        // 5. Salva os dados específicos do médico
+        profissional.setCrm(dto.getCrm());
+        profissional.setEspecialidade(dto.getEspecialidade());
+        // profissional.setValidado(false); // Mantém como pendente para o Admin aprovar depois!
+
+        profissionalRepository.save(profissional);
     }
 }

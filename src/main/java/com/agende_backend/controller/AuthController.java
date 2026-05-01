@@ -11,6 +11,7 @@ import com.agende_backend.dto.RegisterProfissionalRequest;
 import com.agende_backend.dto.RegistroInicialDTO;
 import com.agende_backend.dto.AuthResponse.ResetPasswordRequestDTO;
 import com.agende_backend.dto.CompletarPerfilPacienteDTO;
+import com.agende_backend.dto.CompletarPerfilProfissionalDTO;
 import com.agende_backend.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -89,6 +90,15 @@ public class AuthController {
       } catch (RuntimeException e) {
         return ResponseEntity.badRequest().body("Erro ao completar o perfil: " + e.getMessage());
       }
+    }
 
+    @PatchMapping("/completar-perfil/profissional")
+    public ResponseEntity<String> completarPerfilProfissional(@Valid @RequestBody CompletarPerfilProfissionalDTO request){
+      try{
+          authService.completarPerfilProfissional(request);
+          return ResponseEntity.ok("Perfil profissional completado com sucesso!");
+      } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body("Erro ao completar o perfil profissional: " + e.getMessage());
+      }
     }
 }
