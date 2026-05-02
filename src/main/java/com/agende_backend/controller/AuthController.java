@@ -91,14 +91,11 @@ public class AuthController {
         return ResponseEntity.badRequest().body("Erro ao completar o perfil: " + e.getMessage());
       }
     }
-
+    // NOVO Endpoint para completar o perfil do profissional
     @PutMapping("/completar-perfil/profissional")
-    public ResponseEntity<String> completarPerfilProfissional(@Valid @RequestBody CompletarPerfilProfissionalDTO request){
-      try{
-          authService.completarPerfilProfissional(request);
-          return ResponseEntity.ok("Perfil profissional completado com sucesso!");
-      } catch (RuntimeException e) {
-        return ResponseEntity.badRequest().body("Erro ao completar o perfil profissional: " + e.getMessage());
-      }
+    public ResponseEntity<AuthResponse> completarPerfilProfissional(@RequestBody CompletarPerfilProfissionalDTO request){
+        AuthResponse respose = authService.completarPerfilProfissional(request);
+        return ResponseEntity.ok(respose);
+
     }
 }

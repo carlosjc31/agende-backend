@@ -73,7 +73,8 @@ public class ProfissionalService {
     public void rejeitarProfissional(UUID id) {
         Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
-        profissionalRepository.delete(profissional);
+        profissional.setValidado(false);
+        profissionalRepository.save(profissional);
     }
     // dados do profissional para response
     private ProfissionalResponse convertToResponse(Profissional profissional) {
@@ -95,6 +96,9 @@ public class ProfissionalService {
         response.setTotalAvaliacoes(profissional.getTotalAvaliacoes());
         response.setTotalPacientes(profissional.getTotalPacientes());
         response.setDisponivel(true); // Pode adicionar lógica adicional
+        response.setValidado(Boolean.TRUE.equals(profissional.getValidado())); // Garante que seja false se for null
+        response.setDisponivel(true);
+
         return response;
     }
     // atualizar profissional pelo id

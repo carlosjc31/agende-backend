@@ -153,16 +153,10 @@ public class AuthService {
         usuario.setEmail(request.getEmail());
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
         usuario.setPerfil(Usuario.PerfilUsuario.PROFISSIONAL);
+        usuario.setAtivo(true);
         usuario = usuarioRepository.save(usuario);
 
         // 3. Cria o Perfil do Médico
-        Profissional profissional = new Profissional();
-        profissional.setUsuario(usuario);
-        profissional.setNomeCompleto(request.getNomeCompleto());
-        profissional.setTelefone(request.getTelefone());
-        profissional.setEspecialidade(request.getEspecialidade());
-        profissional.setCrm(request.getCrm());
-        profissionalRepository.save(profissional);
 
         // 4. Gera o token a partir do email e do perfil
         String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().name());
@@ -173,9 +167,9 @@ public class AuthService {
             usuario.getId(),
             usuario.getEmail(),
             usuario.getPerfil().name(), // Pega a Role (PROFISSIONAL)
-            profissional.getId(), // O ID do médico
-            profissional.getNomeCompleto(),
-            profissional.getTelefone()
+            null,
+            null,
+            null
         );
     }
     // Método para processar a solicitação de recuperação de senha
@@ -262,7 +256,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void completarPerfilProfissional(CompletarPerfilProfissionalDTO dto) {
+    public AuthResponse completarPerfilProfissional(CompletarPerfilProfissionalDTO dto) {
         // 1. Pega o e-mail do usuário que está logado e fazendo a requisição
         String emailUsuarioLogado = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -283,6 +277,15 @@ public class AuthService {
 
         usuarioRepository.save(usuario);
         profissionalRepository.save(profissional);
+
+        return new AuthResponse(
+          "",
+          usuario.getId(),
+          usuario.getEmail(),
+          usuario.getPerfil().name(),
+          profissional.getId(),
+          profissional.getNomeCompleto(),
+          profissional.getTelefone());
 
     }
 }

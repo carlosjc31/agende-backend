@@ -79,5 +79,7 @@ public class Profissional {
     @Column(name = "total_pacientes")
     private Integer totalPacientes = 0;
 
+    
+
 
 }
